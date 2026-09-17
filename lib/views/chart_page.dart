@@ -127,7 +127,7 @@ class _ChartPageState extends State<ChartPage> {
                 ],
               ),
             ),
-            const SizedBox(height: 32),
+            const SizedBox(height: 60),
           ],
         ),
       ),

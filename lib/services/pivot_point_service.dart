@@ -6,18 +6,18 @@ class PivotPointService {
   final ApiClient _client;
   PivotPointService(this._client);
 
-  Future<PivotPointModel> hitung({
+    Future<PivotPointModel> hitung({
     required String asset,
     required DateTime tanggal,
-    double? open,
   }) async {
     final tanggalStr =
         '${tanggal.year.toString().padLeft(4, '0')}-${tanggal.month.toString().padLeft(2, '0')}-${tanggal.day.toString().padLeft(2, '0')}';
 
+    // Harga open sekarang diambil backend secara real-time dari live-quotes,
+    // jadi tidak perlu dikirim manual dari sini lagi.
     final res = await _client.post('/pivot-point/hitung', {
       'asset': asset,
       'tanggal': tanggalStr,
-      'open': ?open,  // Hanya masuk ke map jika open != null
     });
     return PivotPointModel.fromJson(res['data'] ?? res);
   }

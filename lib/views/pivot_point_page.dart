@@ -1,6 +1,5 @@
 // views/pivot_point_page.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/pivot_point_viewmodel.dart';
@@ -16,15 +15,19 @@ class PivotPointPage extends StatefulWidget {
 class _PivotPointPageState extends State<PivotPointPage> {
   DateTime _selectedDate = DateTime.now();
   String _selectedAsset = 'gold'; // gold | nikkei | hangseng
-  final _openController = TextEditingController();
 
   static const _assetLabels = {'gold': 'Gold', 'nikkei': 'JPK', 'hangseng': 'HKK'};
   static const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
 
   @override
-  void dispose() {
-    _openController.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    // Karena PivotPointViewModel di-share di level root app, hasil hitung
+    // terakhir akan tetap "nempel" walau halaman ini ditutup-buka lagi.
+    // Reset di sini supaya halaman selalu mulai dari state kosong/fresh.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) context.read<PivotPointViewModel>().reset();
+    });
   }
 
   String _formatDate(DateTime date) {
@@ -36,12 +39,6 @@ class _PivotPointPageState extends State<PivotPointPage> {
 
   String _formatNumber(double value) {
     return value.toStringAsFixed(2);
-  }
-
-  double? _parseOpen() {
-    final text = _openController.text.trim();
-    if (text.isEmpty) return null;
-    return double.tryParse(text.replaceAll(',', '.'));
   }
 
   Future<void> _pilihTanggal() async {
@@ -56,7 +53,7 @@ class _PivotPointPageState extends State<PivotPointPage> {
 
   void _hitung() {
     final vm = context.read<PivotPointViewModel>();
-    vm.hitung(asset: _selectedAsset, tanggal: _selectedDate, open: _parseOpen());
+    vm.hitung(asset: _selectedAsset, tanggal: _selectedDate);
   }
 
   @override
@@ -96,7 +93,7 @@ class _PivotPointPageState extends State<PivotPointPage> {
               const Text('Data Pasar (Input)',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
               const SizedBox(height: 4),
-              const Text('Pilih tanggal & aset, lalu masukkan harga open (opsional)',
+              const Text('Pilih tanggal & aset',
                   style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
               const SizedBox(height: 16),
 
@@ -155,15 +152,6 @@ class _PivotPointPageState extends State<PivotPointPage> {
                   }).toList(),
                 ),
               ),
-              const SizedBox(height: 14),
-
-              // Harga Open (manual)
-              _InputField(
-                label: 'Harga Open',
-                controller: _openController,
-                hint: 'Contoh: 4400.00',
-              ),
-
               const SizedBox(height: 32),
               SizedBox(
                 width: double.infinity,
@@ -259,46 +247,6 @@ class _PivotPointPageState extends State<PivotPointPage> {
       }
     }
     return rows;
-  }
-}
-
-class _InputField extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-  final String? hint;
-
-  const _InputField({required this.label, required this.controller, this.hint});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.divider),
-      ),
-      child: Row(
-        children: [
-          Expanded(child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary))),
-          SizedBox(
-            width: 130,
-            child: TextField(
-              controller: controller,
-              keyboardType: const TextInputType.numberWithOptions(decimal: true),
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
-              textAlign: TextAlign.right,
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: AppColors.textPrimary),
-              decoration: InputDecoration(
-                border: InputBorder.none,
-                hintText: hint,
-                hintStyle: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.normal),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
   }
 }
 

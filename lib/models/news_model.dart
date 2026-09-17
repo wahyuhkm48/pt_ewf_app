@@ -9,7 +9,6 @@ class NewsModel {
   final String sourceName;
   final String? sourceIcon;
   final List<String> category;
-  final List<String>? creator;
 
   NewsModel({
     required this.articleId,
@@ -21,7 +20,6 @@ class NewsModel {
     required this.sourceName,
     this.sourceIcon,
     this.category = const [],
-    this.creator,
   });
 
   factory NewsModel.fromJson(Map<String, dynamic> json) => NewsModel(
@@ -34,6 +32,5 @@ class NewsModel {
         sourceName: json['source_name'] ?? 'Tidak diketahui',
         sourceIcon: json['source_icon'],
         category: json['category'] != null ? List<String>.from(json['category']) : [],
-        creator: json['creator'] != null ? List<String>.from(json['creator']) : null,
       );
 }

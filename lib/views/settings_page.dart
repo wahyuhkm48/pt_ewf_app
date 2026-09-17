@@ -84,7 +84,7 @@ class SettingsPage extends StatelessWidget {
                     isDestructive: true,
                     onTap: () => _confirmLogout(context, auth),
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 120),
                 ],
               ),
             ),

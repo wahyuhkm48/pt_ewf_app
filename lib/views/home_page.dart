@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'hot_news_page.dart';
 import '../theme/app_colors.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/market_info_section.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../utils/page_transitions.dart';
@@ -107,6 +108,9 @@ class _HomePageState extends State<HomePage> {
                 );
               }),
             ),
+            const SizedBox(height: 24),
+            const MarketInfoSection(),
+            const SizedBox(height: 24),
           ],
         ),
       ),

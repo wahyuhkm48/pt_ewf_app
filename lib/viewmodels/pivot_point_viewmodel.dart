@@ -11,17 +11,22 @@ class PivotPointViewModel extends ChangeNotifier {
   String? errorMessage;
   PivotPointModel? result;
 
-  Future<void> hitung({
+  void reset() {
+    result = null;
+    errorMessage = null;
+    notifyListeners();
+  }
+
+    Future<void> hitung({
     required String asset,
     required DateTime tanggal,
-    double? open,
   }) async {
     isLoading = true;
     errorMessage = null;
     notifyListeners();
 
     try {
-      result = await _service.hitung(asset: asset, tanggal: tanggal, open: open);
+      result = await _service.hitung(asset: asset, tanggal: tanggal);
     } catch (e) {
       errorMessage = e.toString();
     } finally {
