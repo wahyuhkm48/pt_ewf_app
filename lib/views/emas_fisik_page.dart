@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/emas_fisik_viewmodel.dart';
+import '../widgets/education_sections.dart';
 
 class EmasFisikPage extends StatefulWidget {
   const EmasFisikPage({super.key});
@@ -109,6 +110,8 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
                 ),
               ),
               const SizedBox(height: 24),
+              const EmasFisikExplainer(),
+              const SizedBox(height: 20),
               const Text('Input Data',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
               const SizedBox(height: 12),
@@ -185,6 +188,12 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
                 _ResultCard(number: 5, title: 'Keuntungan', formula: 'Selisih × Gram',
                     value: '${result.profit >= 0 ? '+' : ''}Rp ${_formatNumber(result.profit)}',
                     valueColor: result.profit >= 0 ? AppColors.success : Colors.red),
+                const SizedBox(height: 16),
+                EmasFisikReadingCard(
+                  selisih: result.selisih,
+                  beratGram: result.beratGram,
+                  profit: result.profit,
+                ),
               ],
             ],
           ),

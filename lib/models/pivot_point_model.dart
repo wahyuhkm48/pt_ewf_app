@@ -1,11 +1,13 @@
 // models/pivot_point_model.dart
 class PivotPointModel {
   final int id;
+  final String? asset; // 'gold' | 'nikkei' | 'hangseng' | null (riwayat lama)
   final double? open;
   final double high;
   final double low;
   final double close;
   final double pivotPoint;
+  final String? action; // 'buy' | 'sell' | 'netral' | null (riwayat lama)
   final List<double> resistance;
   final List<double> support;
   final List<Map<String, dynamic>>? chartPoints;
@@ -13,11 +15,13 @@ class PivotPointModel {
 
   PivotPointModel({
     required this.id,
+    this.asset,
     this.open,
     required this.high,
     required this.low,
     required this.close,
     required this.pivotPoint,
+    this.action,
     required this.resistance,
     required this.support,
     this.chartPoints,
@@ -26,11 +30,13 @@ class PivotPointModel {
 
   factory PivotPointModel.fromJson(Map<String, dynamic> json) => PivotPointModel(
         id: json['id'],
+        asset: json['asset'],
         open: json['open'] != null ? (json['open'] as num).toDouble() : null,
         high: (json['high'] as num).toDouble(),
         low: (json['low'] as num).toDouble(),
         close: (json['close'] as num).toDouble(),
         pivotPoint: (json['pivot_point'] as num).toDouble(),
+        action: json['action'],
         resistance: (json['resistance'] as List).map((e) => (e as num).toDouble()).toList(),
         support: (json['support'] as List).map((e) => (e as num).toDouble()).toList(),
         chartPoints: json['chart_points'] != null

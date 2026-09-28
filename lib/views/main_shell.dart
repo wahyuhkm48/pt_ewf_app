@@ -6,7 +6,7 @@ import 'home_page.dart';
 import 'history_page.dart';
 import 'chart_page.dart';
 import 'settings_page.dart';
-import 'pivot_point_page.dart';
+import 'konsep_transaksi_page.dart';
 import 'emas_fisik_page.dart';
 
 class MainShell extends StatefulWidget {
@@ -48,7 +48,7 @@ class _MainShellState extends State<MainShell> {
                   iconAsset: 'assets/images/icons/pivot_point.png',
                   label: 'Pivot Point',
                   onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const PivotPointPage()),
+                    MaterialPageRoute(builder: (_) => const KonsepTransaksiPage()),
                   ),
                 ),
                 SpeedDialAction(

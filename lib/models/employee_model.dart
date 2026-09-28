@@ -5,6 +5,8 @@ class EmployeeModel {
   final String email;
   final String role;
   final String? foto;
+  final String? noTelp;
+  final DateTime? createdAt;
 
   EmployeeModel({
     required this.userId,
@@ -12,6 +14,8 @@ class EmployeeModel {
     required this.email,
     required this.role,
     this.foto,
+    this.noTelp,
+    this.createdAt,
   });
 
   factory EmployeeModel.fromJson(Map<String, dynamic> json) => EmployeeModel(
@@ -20,5 +24,7 @@ class EmployeeModel {
         email: json['email'],
         role: json['role'],
         foto: json['foto'],
+        noTelp: json['no_telp'],
+        createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null,
       );
 }

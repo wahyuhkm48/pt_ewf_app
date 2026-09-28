@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_colors.dart';
 import '../models/news_model.dart';
+import '../widgets/news_fallback_cover.dart';
 
 class NewsDetailPage extends StatelessWidget {
   final NewsModel article;
@@ -36,16 +37,14 @@ class NewsDetailPage extends StatelessWidget {
                   tag: 'news_image_${article.articleId}',
                   child: SizedBox(
                     height: 400, width: double.infinity,
-                    child: article.imageUrl != null
+                     child: article.imageUrl != null
                         ? Image.network(
                             article.imageUrl!,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => Container(
-                              color: AppColors.divider,
-                              child: const Icon(Icons.image_not_supported_outlined, color: AppColors.textSecondary, size: 48),
-                            ),
+                            errorBuilder: (context, error, stackTrace) =>
+                                NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 72),
                           )
-                        : Container(color: AppColors.divider, child: const Icon(Icons.image_outlined, color: AppColors.textSecondary, size: 48)),
+                        : NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 72),
                   ),
                 ),
                 Positioned(

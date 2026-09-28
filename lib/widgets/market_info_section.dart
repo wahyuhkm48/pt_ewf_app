@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import 'tradingview_symbol_info.dart';
-import 'tradingview_technical_analysis.dart';
 
 class MarketInfoSection extends StatefulWidget {
   const MarketInfoSection({super.key});
@@ -39,26 +38,10 @@ class _MarketInfoSectionState extends State<MarketInfoSection> {
           child: TradingViewSymbolInfo(
             key: ValueKey('symbol-info-$symbol'),
             symbol: symbol,
-            height: 190,
+            height: 230,
           ),
         ),
-        const SizedBox(height: 16),
-
-        // Container Technical Analysis
-        Container(
-          width: double.infinity,
-          clipBehavior: Clip.antiAlias,
-          decoration: BoxDecoration(
-            color: AppColors.surface,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: AppColors.divider),
-          ),
-          child: TradingViewTechnicalAnalysis(
-            key: ValueKey('technical-analysis-$symbol'),
-            symbol: symbol,
-            height: 450,
-          ),
-        ),
+        const SizedBox(height: 56),
       ],
     );
   }

@@ -28,9 +28,68 @@ class AuthViewModel extends ChangeNotifier {
     }
   }
 
+  Future<bool> register({
+    required String namaLengkap,
+    required String email,
+    required String password,
+  }) async {
+    isLoading = true;
+    errorMessage = null;
+    notifyListeners();
+
+    try {
+      employee = await _service.register(namaLengkap: namaLengkap, email: email, password: password);
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      return false;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> logout() async {
     await _service.logout();
     employee = null;
     notifyListeners();
+  }
+
+  Future<bool> updateProfile({String? namaLengkap, String? noTelp}) async {
+    try {
+      employee = await _service.updateProfile(namaLengkap: namaLengkap, noTelp: noTelp);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> updateFoto(List<int> bytes, String filename) async {
+    try {
+      employee = await _service.updateFoto(bytes, filename);
+      notifyListeners();
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
+  }
+
+  Future<bool> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) async {
+    try {
+      await _service.changePassword(currentPassword: currentPassword, newPassword: newPassword);
+      return true;
+    } catch (e) {
+      errorMessage = e.toString();
+      notifyListeners();
+      return false;
+    }
   }
 }

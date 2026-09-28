@@ -9,6 +9,7 @@ import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../utils/page_transitions.dart';
 import '../viewmodels/auth_viewmodel.dart';
+import '../widgets/news_fallback_cover.dart';
 
 const String kNewsCombinedQuery = 'Federal Reserve OR interest rate';
 
@@ -151,17 +152,17 @@ class _NewsCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (article.imageUrl != null)
-            Image.network(
-              article.imageUrl!,
-              height: 80, width: double.infinity, fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) => Container(
-                height: 80, color: Colors.white24,
-                child: const Icon(Icons.image_not_supported_outlined, color: Colors.white70, size: 24),
-              ),
-            )
-          else
-            Container(height: 80, color: Colors.white24, child: const Icon(Icons.image_outlined, color: Colors.white70, size: 24)),
+          SizedBox(
+            height: 80, width: double.infinity,
+            child: article.imageUrl != null
+                ? Image.network(
+                    article.imageUrl!,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) =>
+                        NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 32),
+                  )
+                : NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 32),
+          ),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Column(

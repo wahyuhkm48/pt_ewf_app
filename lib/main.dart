@@ -12,7 +12,9 @@ import 'viewmodels/pivot_point_viewmodel.dart';
 import 'viewmodels/emas_fisik_viewmodel.dart';
 import 'viewmodels/histori_viewmodel.dart';
 import 'viewmodels/news_viewmodel.dart';
-import 'views/login_page.dart';
+import 'services/nest_service.dart';
+import 'viewmodels/nest_viewmodel.dart';
+import 'views/splash_page.dart';
 
 void main() {
   final apiClient = ApiClient();
@@ -23,6 +25,7 @@ void main() {
         Provider(create: (_) => apiClient),
         ChangeNotifierProvider(create: (_) => AuthViewModel(AuthService(apiClient))),
         ChangeNotifierProvider(create: (_) => PivotPointViewModel(PivotPointService(apiClient))),
+        ChangeNotifierProvider(create: (_) => NestViewModel(NestService(apiClient))),
         ChangeNotifierProvider(create: (_) => EmasFisikViewModel(EmasFisikService(apiClient), MarketDataService(apiClient))),
         ChangeNotifierProvider(create: (_) => HistoriViewModel(HistoriService(apiClient))),
         ChangeNotifierProvider(create: (_) => NewsViewModel(NewsService(apiClient))),
@@ -40,7 +43,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EquityWorld',
       debugShowCheckedModeBanner: false,
-      home: const LoginPage(),
+      home: const SplashPage(),
     );
   }
 }

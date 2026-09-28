@@ -1,0 +1,98 @@
+// views/emas_fisik_detail_page.dart
+import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
+import '../models/emas_fisik_model.dart';
+import '../widgets/mini_stat.dart';
+
+class EmasFisikDetailPage extends StatelessWidget {
+  final EmasFisikModel item;
+  const EmasFisikDetailPage({super.key, required this.item});
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '-';
+    const months = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agu','Sep','Okt','Nov','Des'];
+    return '${date.day} ${months[date.month - 1]} ${date.year}';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final untung = item.profit >= 0;
+
+    return Scaffold(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 8, 20, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 44,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        icon: const Icon(Icons.arrow_back_rounded, color: AppColors.textPrimary),
+                        padding: EdgeInsets.zero,
+                      ),
+                    ),
+                    const Text('Detail Emas Fisik',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(_formatDate(item.tanggal), style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+              const SizedBox(height: 20),
+
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                decoration: BoxDecoration(
+                  color: (untung ? AppColors.success : AppColors.danger).withValues(alpha: 0.12),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: untung ? AppColors.success : AppColors.danger),
+                ),
+                child: Column(
+                  children: [
+                    Text(untung ? 'UNTUNG' : 'RUGI',
+                        style: TextStyle(
+                            color: untung ? AppColors.success : AppColors.danger,
+                            fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1)),
+                    const SizedBox(height: 4),
+                    Text(item.profit.toStringAsFixed(2),
+                        style: TextStyle(
+                            color: untung ? AppColors.success : AppColors.danger,
+                            fontWeight: FontWeight.bold, fontSize: 22)),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              Container(
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: AppColors.surface,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(color: AppColors.divider),
+                ),
+                child: Row(
+                  children: [
+                    MiniStat(label: 'HHB', value: item.hhb.toStringAsFixed(2)),
+                    MiniStat(label: 'HHJ', value: item.hhj.toStringAsFixed(2)),
+                    MiniStat(label: 'Selisih', value: item.selisih.toStringAsFixed(2)),
+                    MiniStat(label: 'Berat', value: '${item.beratGram.toStringAsFixed(2)} gr'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}

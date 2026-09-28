@@ -4,6 +4,13 @@ import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import 'login_page.dart';
+import 'account_information_page.dart';
+import 'password_page.dart';
+import 'notification_page.dart';
+import 'language_page.dart';
+import 'help_page.dart';
+import 'about_page.dart';
+import '../widgets/avatar_ring.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -13,6 +20,7 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('>>>>> SETTINGS PAGE KEBANGUN <<<<<');
     final auth = context.watch<AuthViewModel>();
     final employee = auth.employee;
 
@@ -42,7 +50,7 @@ class SettingsPage extends StatelessWidget {
                       Positioned(
                         top: headerHeight - avatarOverlapUp,
                         left: (width - _avatarSize) / 2,
-                        child: _AvatarRing(
+                        child: AvatarRing(
                           size: _avatarSize,
                           fotoUrl: employee?.foto,
                           nama: employee?.namaLengkap,
@@ -68,15 +76,57 @@ class SettingsPage extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
-                  const _SettingTile(icon: Icons.person_outline_rounded, label: 'Account Information'),
+                  _SettingTile(
+                    icon: Icons.person_outline_rounded,
+                    label: 'Account Information',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const AccountInformationPage()),
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  const _SettingTile(icon: Icons.lock_outline_rounded, label: 'Password'),
+                  _SettingTile(
+                    icon: Icons.lock_outline_rounded,
+                    label: 'Password',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const PasswordPage()),
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  const _SettingTile(icon: Icons.notifications_none_rounded, label: 'Notification'),
+                  _SettingTile(
+                    icon: Icons.notifications_none_rounded,
+                    label: 'Notification',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NotificationPage()),
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  const _SettingTile(icon: Icons.language_rounded, label: 'Language'),
+                  _SettingTile(
+                    icon: Icons.language_rounded,
+                    label: 'Language',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const LanguagePage()),
+                    ),
+                  ),
                   const SizedBox(height: 12),
-                  const _SettingTile(icon: Icons.help_outline_outlined, label: 'Help'),
+                  _SettingTile(
+                    icon: Icons.help_outline_outlined,
+                    label: 'Help',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const HelpPage()),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _SettingTile(
+                    icon: Icons.info_outline_rounded,
+                    label: 'About Me',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AboutPage()),
+                    ),
+                  ),
                   const SizedBox(height: 12),
                   _SettingTile(
                     icon: Icons.logout_rounded,
@@ -84,7 +134,7 @@ class SettingsPage extends StatelessWidget {
                     isDestructive: true,
                     onTap: () => _confirmLogout(context, auth),
                   ),
-                  const SizedBox(height: 120),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
@@ -116,75 +166,6 @@ class SettingsPage extends StatelessWidget {
         );
       }
     }
-  }
-}
-
-/// Foto profil bulat dengan cincin gradient oranye→biru dibuat langsung
-/// di kode (tidak lagi bergantung ke asset gambar seperti group 12852.png).
-/// Foto diambil dari `employee.foto` (kolom database). Kalau foto kosong,
-/// otomatis fallback ke inisial nama.
-class _AvatarRing extends StatelessWidget {
-  final double size;
-  final String? fotoUrl;
-  final String? nama;
-
-  const _AvatarRing({required this.size, this.fotoUrl, this.nama});
-
-  String get _initial {
-    final n = nama?.trim();
-    if (n == null || n.isEmpty) return '?';
-    return n[0].toUpperCase();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      // Ketebalan cincin gradient
-      padding: const EdgeInsets.all(4),
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [AppColors.primary, AppColors.secondary],
-        ),
-      ),
-      child: Container(
-        // Jarak putih tipis antara cincin gradient dan foto
-        padding: const EdgeInsets.all(4),
-        decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
-        child: ClipOval(
-          child: fotoUrl != null && fotoUrl!.isNotEmpty
-              ? Image.network(
-                  fotoUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => _fallback(),
-                  loadingBuilder: (context, child, progress) {
-                    if (progress == null) return child;
-                    return Container(
-                      color: AppColors.surface,
-                      alignment: Alignment.center,
-                      child: const CircularProgressIndicator(strokeWidth: 2, color: AppColors.primary),
-                    );
-                  },
-                )
-              : _fallback(),
-        ),
-      ),
-    );
-  }
-
-  Widget _fallback() {
-    return Container(
-      color: AppColors.primarySoft,
-      alignment: Alignment.center,
-      child: Text(
-        _initial,
-        style: const TextStyle(fontSize: 48, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
-      ),
-    );
   }
 }
 

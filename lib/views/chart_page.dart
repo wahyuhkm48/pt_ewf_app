@@ -6,6 +6,7 @@ import '../widgets/empty_state.dart';
 import '../widgets/tradingview_chart.dart';
 import '../viewmodels/histori_viewmodel.dart';
 import '../models/histori_data_model.dart';
+import '../utils/histori_excel_exporter.dart';
 
 class ChartPage extends StatefulWidget {
   const ChartPage({super.key});
@@ -18,6 +19,7 @@ class _ChartPageState extends State<ChartPage> {
   int _selectedTab = 0; // 0 = Gold, 1 = JPK, 2 = HKK
   final List<String> _tabs = const ['Gold', 'JPK', 'HKK'];
   final List<String> _tvSymbols = const ['Saxo:XAUUSD', 'Vantage:NIKKEI225', 'IG:HANGSENG'];
+  bool _isExporting = false;
 
   @override
   void initState() {
@@ -30,6 +32,31 @@ class _ChartPageState extends State<ChartPage> {
   void _pindahTab(int index) {
     setState(() => _selectedTab = index);
     context.read<HistoriViewModel>().loadTab(index);
+  }
+
+  Future<void> _unduhExcel() async {
+    if (_isExporting) return;
+
+    final data = context.read<HistoriViewModel>().forTab(_selectedTab);
+    final messenger = ScaffoldMessenger.of(context);
+
+    if (data.isEmpty) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Belum ada data untuk diunduh')),
+      );
+      return;
+    }
+
+    setState(() => _isExporting = true);
+    try {
+      await HistoriExcelExporter.export(namaAset: _tabs[_selectedTab], data: data);
+    } catch (_) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Gagal membuat file Excel, coba lagi')),
+      );
+    } finally {
+      if (mounted) setState(() => _isExporting = false);
+    }
   }
 
   @override
@@ -63,16 +90,32 @@ class _ChartPageState extends State<ChartPage> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Data Historis', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(color: AppColors.successBg, borderRadius: BorderRadius.circular(10)),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.file_download_outlined, size: 16, color: AppColors.success),
-                      SizedBox(width: 6),
-                      Text('Excel', style: TextStyle(color: AppColors.success, fontWeight: FontWeight.w600, fontSize: 13)),
-                    ],
+                Material(
+                  color: AppColors.successBg,
+                  borderRadius: BorderRadius.circular(10),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: _isExporting ? null : _unduhExcel,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _isExporting
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(strokeWidth: 2, color: AppColors.success),
+                                )
+                              : const Icon(Icons.file_download_outlined, size: 16, color: AppColors.success),
+                          const SizedBox(width: 6),
+                          Text(
+                            _isExporting ? 'Menyiapkan...' : 'Excel',
+                            style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w600, fontSize: 13),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               ],

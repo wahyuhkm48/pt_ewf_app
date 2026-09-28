@@ -7,6 +7,7 @@ import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../utils/page_transitions.dart';
 import 'news_detail_page.dart';
+import '../widgets/news_fallback_cover.dart';
 
 class HotNewsPage extends StatefulWidget {
   final String query;
@@ -95,12 +96,10 @@ class _HotNewsCard extends StatelessWidget {
                     ? Image.network(
                         article.imageUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: AppColors.divider,
-                          child: const Icon(Icons.image_not_supported_outlined, color: AppColors.textSecondary, size: 40),
-                        ),
+                        errorBuilder: (context, error, stackTrace) =>
+                            NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon),
                       )
-                    : Container(color: AppColors.divider, child: const Icon(Icons.image_outlined, color: AppColors.textSecondary, size: 40)),
+                    : NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon),
               ),
               const DecoratedBox(
                 decoration: BoxDecoration(

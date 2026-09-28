@@ -34,6 +34,35 @@ class ApiClient {
     return _handle(res);
   }
 
+  Future<dynamic> put(String path, Map<String, dynamic> body) async {
+    final res = await http.put(
+      Uri.parse('$baseUrl$path'),
+      headers: await _headers(),
+      body: jsonEncode(body),
+    );
+    return _handle(res);
+  }
+
+  Future<dynamic> postMultipart(
+    String path, {
+    required String fieldName,
+    required List<int> bytes,
+    required String filename,
+  }) async {
+    final uri = Uri.parse('$baseUrl$path');
+    final request = http.MultipartRequest('POST', uri);
+
+    final headers = await _headers();
+    headers.remove('Content-Type'); // biar package http yang atur boundary multipart otomatis
+    request.headers.addAll(headers);
+
+    request.files.add(http.MultipartFile.fromBytes(fieldName, bytes, filename: filename));
+
+    final streamed = await request.send();
+    final res = await http.Response.fromStream(streamed);
+    return _handle(res);
+  }
+
   dynamic _handle(http.Response res) {
     final decoded = jsonDecode(res.body);
     if (res.statusCode >= 200 && res.statusCode < 300) {
