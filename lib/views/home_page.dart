@@ -34,6 +34,13 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  Future<void> _refresh() async {
+    await Future.wait([
+      context.read<NewsViewModel>().loadNews(forceRefresh: true),
+      context.read<RecentHistoryViewModel>().load(silent: true),
+    ]);
+  }
+
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<NewsViewModel>();
@@ -41,83 +48,87 @@ class _HomePageState extends State<HomePage> {
     final namaDepan = (employee?.namaLengkap ?? 'Pengguna').split(' ').first;
 
     return SafeArea(
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Hi $namaDepan!', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                    const SizedBox(height: 2),
-                    const Text('Good Morning', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
-                  ],
-                ),
-                Container(
-                  width: 44, height: 44,
-                  decoration: const BoxDecoration(color: AppColors.surface, shape: BoxShape.circle),
-                  child: const Icon(Icons.notifications_none_rounded, color: AppColors.textPrimary),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(color: AppColors.primarySoft, borderRadius: BorderRadius.circular(20)),
-              child: Row(
+      child: RefreshIndicator(
+        onRefresh: _refresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text('Welcome!', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
-                        SizedBox(height: 6),
-                        Text("Let's schedule your projects", style: TextStyle(fontSize: 13, color: AppColors.textPrimary)),
-                      ],
-                    ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Hi $namaDepan!', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      const SizedBox(height: 2),
+                      const Text('Good Morning', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                    ],
                   ),
-                  const Icon(Icons.laptop_mac_rounded, size: 48, color: AppColors.primaryDark),
+                  Container(
+                    width: 44, height: 44,
+                    decoration: const BoxDecoration(color: AppColors.surface, shape: BoxShape.circle),
+                    child: const Icon(Icons.notifications_none_rounded, color: AppColors.textPrimary),
+                  ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
-            _SectionHeader(
-              title: 'Information',
-              onViewAll: () {
-                Navigator.of(context).push(PageTransitions.slideRight(const HotNewsPage(query: kNewsCombinedQuery)));
-              },
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              height: 180,
-              child: Builder(builder: (context) {
-                if (vm.isLoading && vm.articles == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                if (vm.errorMessage != null && vm.articles == null) {
-                  return const EmptyState(icon: Icons.error_outline_rounded, title: 'Gagal memuat berita');
-                }
-                final articles = vm.articles ?? [];
-                if (articles.isEmpty) {
-                  return const EmptyState(icon: Icons.article_outlined, title: 'Belum ada berita');
-                }
-                return ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: articles.length,
-                  separatorBuilder: (_, _) => const SizedBox(width: 12),
-                  itemBuilder: (context, index) => _NewsCard(article: articles[index]),
-                );
-              }),
-            ),
-            const SizedBox(height: 24),
-            RecentHistorySection(onViewAll: widget.onViewAllHistory),
-            const SizedBox(height: 24),
-          ],
+              const SizedBox(height: 20),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(color: AppColors.primarySoft, borderRadius: BorderRadius.circular(20)),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: const [
+                          Text('Welcome!', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                          SizedBox(height: 6),
+                          Text("Let's schedule your projects", style: TextStyle(fontSize: 13, color: AppColors.textPrimary)),
+                        ],
+                      ),
+                    ),
+                    const Icon(Icons.laptop_mac_rounded, size: 48, color: AppColors.primaryDark),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 24),
+              _SectionHeader(
+                title: 'Information',
+                onViewAll: () {
+                  Navigator.of(context).push(PageTransitions.slideRight(const HotNewsPage(query: kNewsCombinedQuery)));
+                },
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                height: 180,
+                child: Builder(builder: (context) {
+                  if (vm.isLoading && vm.articles == null) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  if (vm.errorMessage != null && vm.articles == null) {
+                    return const EmptyState(icon: Icons.error_outline_rounded, title: 'Gagal memuat berita');
+                  }
+                  final articles = vm.articles ?? [];
+                  if (articles.isEmpty) {
+                    return const EmptyState(icon: Icons.article_outlined, title: 'Belum ada berita');
+                  }
+                  return ListView.separated(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: articles.length,
+                    separatorBuilder: (_, _) => const SizedBox(width: 12),
+                    itemBuilder: (context, index) => _NewsCard(article: articles[index]),
+                  );
+                }),
+              ),
+              const SizedBox(height: 24),
+              RecentHistorySection(onViewAll: widget.onViewAllHistory),
+              const SizedBox(height: 24),
+            ],
+          ),
         ),
       ),
     );
