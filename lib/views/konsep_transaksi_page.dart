@@ -1,5 +1,6 @@
-// views/transaksi_page.dart
+// views/konsep_transaksi_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/pivot_point_viewmodel.dart';
@@ -12,6 +13,7 @@ import '../widgets/education_sections.dart';
 import '../utils/pivot_point_levels.dart';
 
 enum _KalkulatorMode { pivotPoint, nest }
+enum _SumberData { otomatis, manual }
 
 class KonsepTransaksiPage extends StatefulWidget {
   const KonsepTransaksiPage({super.key});
@@ -24,9 +26,33 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
   DateTime _selectedDate = DateTime.now();
   String _selectedAsset = 'gold'; // gold | nikkei | hangseng
   _KalkulatorMode _mode = _KalkulatorMode.pivotPoint; // default: Pivot Point
+  _SumberData _sumberData = _SumberData.otomatis;
+
+  // ===== Input Manual =====
+  final _highCtrl = TextEditingController();
+  final _lowCtrl = TextEditingController();
+  final _closeCtrl = TextEditingController();
+  final _openCtrl = TextEditingController(); // opsional, khusus Pivot Point
+  final _closeKemarinCtrl = TextEditingController();
+  final _openHariIniCtrl = TextEditingController();
+  bool _showOpenManual = false;
+  String? _manualError;
+  PivotPointModel? _manualPivotResult;
+  NestModel? _manualNestResult;
 
   static const _assetLabels = {'gold': 'Gold', 'nikkei': 'JPK', 'hangseng': 'HKK'};
   static const _months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+
+  @override
+  void dispose() {
+    _highCtrl.dispose();
+    _lowCtrl.dispose();
+    _closeCtrl.dispose();
+    _openCtrl.dispose();
+    _closeKemarinCtrl.dispose();
+    _openHariIniCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -57,12 +83,164 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
     if (picked != null) setState(() => _selectedDate = picked);
   }
 
+  double? _parseInput(String raw) {
+    final text = raw.trim().replaceAll(',', '.');
+    if (text.isEmpty) return null;
+    return double.tryParse(text);
+  }
+
+  double _round2(double v) => (v * 100).round() / 100;
+
   void _hitung() {
-    if (_mode == _KalkulatorMode.pivotPoint) {
-      context.read<PivotPointViewModel>().hitung(asset: _selectedAsset, tanggal: _selectedDate);
-    } else {
-      context.read<NestViewModel>().hitung(asset: _selectedAsset, tanggal: _selectedDate);
+    if (_sumberData == _SumberData.otomatis) {
+      if (_mode == _KalkulatorMode.pivotPoint) {
+        context.read<PivotPointViewModel>().hitung(asset: _selectedAsset, tanggal: _selectedDate);
+      } else {
+        context.read<NestViewModel>().hitung(asset: _selectedAsset, tanggal: _selectedDate);
+      }
+      return;
     }
+
+    // ===== Manual (dihitung langsung di app, tidak lewat API, tidak disimpan) =====
+    FocusScope.of(context).unfocus();
+    setState(() => _manualError = null);
+
+    if (_mode == _KalkulatorMode.pivotPoint) {
+      final high = _parseInput(_highCtrl.text);
+      final low = _parseInput(_lowCtrl.text);
+      final close = _parseInput(_closeCtrl.text);
+      final openRaw = _openCtrl.text.trim();
+      final open = openRaw.isEmpty ? null : _parseInput(openRaw);
+
+      if (high == null || low == null || close == null) {
+        setState(() => _manualError = 'Isi High, Low, dan Close dengan angka yang valid.');
+        return;
+      }
+      if (openRaw.isNotEmpty && open == null) {
+        setState(() => _manualError = 'Open harus berupa angka yang valid, atau kosongkan.');
+        return;
+      }
+      if (low > high) {
+        setState(() => _manualError = 'Low tidak boleh lebih besar dari High.');
+        return;
+      }
+
+      setState(() {
+        _manualPivotResult = _hitungPivotPointManual(high: high, low: low, close: close, open: open);
+      });
+    } else {
+      final closeKemarin = _parseInput(_closeKemarinCtrl.text);
+      final openHariIni = _parseInput(_openHariIniCtrl.text);
+
+      if (closeKemarin == null || openHariIni == null) {
+        setState(() => _manualError = 'Isi Close (Kemarin) dan Open (Hari ini) dengan angka yang valid.');
+        return;
+      }
+
+      setState(() {
+        _manualNestResult = _hitungNestManual(closeKemarin: closeKemarin, openHariIni: openHariIni);
+      });
+    }
+  }
+
+  /// Rumus identik dengan app/Services/PivotPointService.php di backend.
+  PivotPointModel _hitungPivotPointManual({
+    required double high,
+    required double low,
+    required double close,
+    double? open,
+  }) {
+    final pp = (high + low + close) / 3;
+    final range = high - low;
+
+    final resistance = [
+      _round2((2 * pp) - low),
+      _round2(pp + range),
+      _round2(high + 2 * (pp - low)),
+      _round2(high + 3 * (pp - low)),
+    ];
+    final support = [
+      _round2((2 * pp) - high),
+      _round2(pp - range),
+      _round2(low - 2 * (high - pp)),
+      _round2(low - 3 * (high - pp)),
+    ];
+
+    final roundedPp = _round2(pp);
+    String? action;
+    if (open != null) {
+      if (roundedPp > open) {
+        action = 'buy';
+      } else if (roundedPp < open) {
+        action = 'sell';
+      } else {
+        action = 'netral';
+      }
+    }
+
+    return PivotPointModel(
+      id: 0,
+      asset: _selectedAsset,
+      open: open,
+      high: high,
+      low: low,
+      close: close,
+      pivotPoint: roundedPp,
+      action: action,
+      resistance: resistance,
+      support: support,
+      tanggal: null,
+    );
+  }
+
+  /// Rumus identik dengan app/Services/NestService.php di backend.
+  NestModel _hitungNestManual({required double closeKemarin, required double openHariIni}) {
+    final String action;
+    if (closeKemarin > openHariIni) {
+      action = 'buy';
+    } else if (closeKemarin < openHariIni) {
+      action = 'sell';
+    } else {
+      action = 'netral';
+    }
+
+    return NestModel(
+      id: 0,
+      asset: _selectedAsset,
+      open: openHariIni,
+      close: closeKemarin,
+      action: action,
+      tanggal: null,
+    );
+  }
+
+  Widget _numberField({required String label, required TextEditingController controller, String? hint}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        const SizedBox(height: 6),
+        Container(
+          decoration: BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.divider),
+          ),
+          child: TextField(
+            controller: controller,
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
+            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+            decoration: InputDecoration(
+              hintText: hint,
+              hintStyle: const TextStyle(fontSize: 14, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
+              border: InputBorder.none,
+              contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -70,8 +248,15 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
     final pivotVm = context.watch<PivotPointViewModel>();
     final nestVm = context.watch<NestViewModel>();
 
-    final isLoading = _mode == _KalkulatorMode.pivotPoint ? pivotVm.isLoading : nestVm.isLoading;
-    final errorMessage = _mode == _KalkulatorMode.pivotPoint ? pivotVm.errorMessage : nestVm.errorMessage;
+    final isOtomatis = _sumberData == _SumberData.otomatis;
+    final isLoading = isOtomatis
+        ? (_mode == _KalkulatorMode.pivotPoint ? pivotVm.isLoading : nestVm.isLoading)
+        : false;
+    final errorMessage = isOtomatis
+        ? (_mode == _KalkulatorMode.pivotPoint ? pivotVm.errorMessage : nestVm.errorMessage)
+        : _manualError;
+    final pivotResult = isOtomatis ? pivotVm.result : _manualPivotResult;
+    final nestResult = isOtomatis ? nestVm.result : _manualNestResult;
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -150,35 +335,124 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                 ),
               ),
               const SizedBox(height: 14),
+
               // Penjelasan konsep (berubah sesuai mode)
               _mode == _KalkulatorMode.pivotPoint
                   ? const PivotPointExplainer()
                   : const NestExplainer(),
               const SizedBox(height: 14),
 
-              // Tanggal
-              const Text('Tanggal', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              // Sumber Data: Otomatis (dari pasar) / Manual (input sendiri)
+              const Text('Sumber Data', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
               const SizedBox(height: 6),
-              GestureDetector(
-                onTap: _pilihTanggal,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: AppColors.surface,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: AppColors.divider),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(_formatDate(_selectedDate),
-                          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
-                      const Icon(Icons.calendar_today_outlined, size: 18, color: AppColors.textSecondary),
-                    ],
-                  ),
+              Container(
+                padding: const EdgeInsets.all(3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(26),
+                  border: Border.all(color: AppColors.divider),
+                ),
+                child: Row(
+                  children: _SumberData.values.map((sumber) {
+                    final selected = _sumberData == sumber;
+                    final label = sumber == _SumberData.otomatis ? 'Ambil dari Pasar' : 'Input Manual';
+                    return Expanded(
+                      child: GestureDetector(
+                        onTap: () => setState(() {
+                          _sumberData = sumber;
+                          _manualError = null;
+                        }),
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(vertical: 9),
+                          decoration: BoxDecoration(
+                            color: selected ? AppColors.primary.withValues(alpha: 0.12) : Colors.transparent,
+                            borderRadius: BorderRadius.circular(22),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(label,
+                              style: TextStyle(
+                                  color: selected ? AppColors.primary : AppColors.textSecondary,
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12)),
+                        ),
+                      ),
+                    );
+                  }).toList(),
                 ),
               ),
               const SizedBox(height: 14),
+
+              if (_sumberData == _SumberData.otomatis) ...[
+                // Tanggal
+                const Text('Tanggal', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                const SizedBox(height: 6),
+                GestureDetector(
+                  onTap: _pilihTanggal,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                    decoration: BoxDecoration(
+                      color: AppColors.surface,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: AppColors.divider),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(_formatDate(_selectedDate),
+                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                        const Icon(Icons.calendar_today_outlined, size: 18, color: AppColors.textSecondary),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 14),
+              ] else if (_mode == _KalkulatorMode.pivotPoint) ...[
+                // Input manual Pivot Point: High, Low, Close (+ Open opsional)
+                Row(
+                  children: [
+                    Expanded(child: _numberField(label: 'High', controller: _highCtrl, hint: 'cth. 2350.40')),
+                    const SizedBox(width: 12),
+                    Expanded(child: _numberField(label: 'Low', controller: _lowCtrl, hint: 'cth. 2330.10')),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                _numberField(label: 'Close', controller: _closeCtrl, hint: 'cth. 2342.75'),
+                const SizedBox(height: 10),
+                GestureDetector(
+                  onTap: () => setState(() => _showOpenManual = !_showOpenManual),
+                  child: Row(
+                    children: [
+                      Icon(_showOpenManual ? Icons.remove_circle_outline : Icons.add_circle_outline,
+                          size: 16, color: AppColors.primary),
+                      const SizedBox(width: 6),
+                      Text(
+                        _showOpenManual ? 'Sembunyikan Open' : 'Tambah Open (opsional)',
+                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary),
+                      ),
+                    ],
+                  ),
+                ),
+                if (_showOpenManual) ...[
+                  const SizedBox(height: 10),
+                  _numberField(label: 'Open', controller: _openCtrl, hint: 'cth. 2338.00'),
+                  const SizedBox(height: 4),
+                  const Text(
+                    'Diisi supaya muncul sinyal BUY/SELL. Kalau dikosongkan, hanya tabel level yang tampil.',
+                    style: TextStyle(fontSize: 11, height: 1.4, color: AppColors.textSecondary),
+                  ),
+                ],
+                const SizedBox(height: 14),
+              ] else ...[
+                // Input manual Nest: Close (kemarin) & Open (hari ini)
+                Row(
+                  children: [
+                    Expanded(child: _numberField(label: 'Close (Kemarin)', controller: _closeKemarinCtrl, hint: 'cth. 2342.75')),
+                    const SizedBox(width: 12),
+                    Expanded(child: _numberField(label: 'Open (Hari ini)', controller: _openHariIniCtrl, hint: 'cth. 2338.00')),
+                  ],
+                ),
+                const SizedBox(height: 14),
+              ],
 
               // Aset
               const Text('Aset', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
@@ -236,8 +510,8 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                   child: Text(errorMessage, style: const TextStyle(color: AppColors.danger, fontSize: 13)),
                 ),
 
-              if (_mode == _KalkulatorMode.pivotPoint && pivotVm.result != null) ..._buildPivotPointResult(pivotVm.result!),
-              if (_mode == _KalkulatorMode.nest && nestVm.result != null) ..._buildNestResult(nestVm.result!),
+              if (_mode == _KalkulatorMode.pivotPoint && pivotResult != null) ..._buildPivotPointResult(pivotResult),
+              if (_mode == _KalkulatorMode.nest && nestResult != null) ..._buildNestResult(nestResult),
             ],
           ),
         ),
