@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/auth_viewmodel.dart';
+import '../widgets/password_field.dart';
 import 'main_shell.dart';
 import 'register_page.dart';
 
@@ -122,20 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 20),
 
                   // Password
-                  TextField(
-                    controller: passCtrl,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
-                      labelStyle: TextStyle(color: AppColors.textSecondary),
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.divider),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: AppColors.primary),
-                      ),
-                    ),
-                  ),
+                  PasswordField(controller: passCtrl),
 
                   if (vm.errorMessage != null) ...[
                     const SizedBox(height: 12),
