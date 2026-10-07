@@ -12,6 +12,7 @@ class PivotPointModel {
   final List<double> support;
   final List<Map<String, dynamic>>? chartPoints;
   final DateTime? tanggal;
+  final DateTime? createdAt;
 
   PivotPointModel({
     required this.id,
@@ -26,6 +27,7 @@ class PivotPointModel {
     required this.support,
     this.chartPoints,
     this.tanggal,
+    this.createdAt,
   });
 
   factory PivotPointModel.fromJson(Map<String, dynamic> json) => PivotPointModel(
@@ -43,6 +45,7 @@ class PivotPointModel {
             ? List<Map<String, dynamic>>.from(json['chart_points'])
             : null,
         tanggal: json['tanggal'] != null ? DateTime.tryParse(json['tanggal']) : null,
+        createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
       );
 
   /// Urutan level dari atas ke bawah: R4, R3, R2, R1, PP, S1, S2, S3, S4

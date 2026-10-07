@@ -4,7 +4,8 @@ import 'package:provider/provider.dart';
 import 'hot_news_page.dart';
 import '../theme/app_colors.dart';
 import '../widgets/empty_state.dart';
-import '../widgets/market_info_section.dart';
+import '../widgets/recent_history_section.dart';
+import '../viewmodels/recent_history_viewmodel.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../utils/page_transitions.dart';
@@ -14,7 +15,8 @@ import '../widgets/news_fallback_cover.dart';
 const String kNewsCombinedQuery = 'Federal Reserve OR interest rate';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  final VoidCallback? onViewAllHistory;
+  const HomePage({super.key, this.onViewAllHistory});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -26,6 +28,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NewsViewModel>().loadNews();
+      context.read<RecentHistoryViewModel>().load();
     });
   }
 
@@ -110,7 +113,7 @@ class _HomePageState extends State<HomePage> {
               }),
             ),
             const SizedBox(height: 24),
-            const MarketInfoSection(),
+            RecentHistorySection(onViewAll: widget.onViewAllHistory),
             const SizedBox(height: 24),
           ],
         ),

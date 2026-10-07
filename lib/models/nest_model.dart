@@ -6,6 +6,7 @@ class NestModel {
   final double close;
   final String action; // 'buy' | 'sell' | 'netral'
   final DateTime? tanggal;
+  final DateTime? createdAt;
 
   NestModel({
     required this.id,
@@ -14,6 +15,7 @@ class NestModel {
     required this.close,
     required this.action,
     this.tanggal,
+    this.createdAt,
   });
 
   factory NestModel.fromJson(Map<String, dynamic> json) => NestModel(
@@ -23,5 +25,6 @@ class NestModel {
         close: (json['close'] as num).toDouble(),
         action: json['action'],
         tanggal: json['tanggal'] != null ? DateTime.tryParse(json['tanggal']) : null,
+        createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at'].toString()) : null,
       );
 }

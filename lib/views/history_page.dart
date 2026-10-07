@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../widgets/empty_state.dart';
-import '../widgets/action_badge.dart';
+import '../widgets/history_tiles.dart';
 import '../services/pivot_point_service.dart';
 import '../services/nest_service.dart';
 import '../services/emas_fisik_service.dart';
@@ -14,7 +14,6 @@ import '../core/api_client.dart';
 import 'pivot_point_detail_page.dart';
 import 'nest_detail_page.dart';
 import 'emas_fisik_detail_page.dart';
-import '../utils/asset_labels.dart';
 
 class HistoryPage extends StatefulWidget {
   const HistoryPage({super.key});
@@ -133,7 +132,7 @@ class _HistoryPageState extends State<HistoryPage> {
         child: ListView.separated(
           itemCount: _pivotHistory.length,
           separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, i) => _PivotHistoryTile(
+          itemBuilder: (context, i) => PivotHistoryTile(
             item: _pivotHistory[i],
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => PivotPointDetailPage(item: _pivotHistory[i])),
@@ -157,7 +156,7 @@ class _HistoryPageState extends State<HistoryPage> {
         child: ListView.separated(
           itemCount: _nestHistory.length,
           separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, i) => _NestHistoryTile(
+          itemBuilder: (context, i) => NestHistoryTile(
             item: _nestHistory[i],
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => NestDetailPage(item: _nestHistory[i])),
@@ -181,7 +180,7 @@ class _HistoryPageState extends State<HistoryPage> {
         child: ListView.separated(
           itemCount: _emasHistory.length,
           separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, i) => _EmasHistoryTile(
+          itemBuilder: (context, i) => EmasHistoryTile(
             item: _emasHistory[i],
             onTap: () => Navigator.of(context).push(
               MaterialPageRoute(builder: (_) => EmasFisikDetailPage(item: _emasHistory[i])),
@@ -216,167 +215,6 @@ class _TabChip extends StatelessWidget {
             fontWeight: FontWeight.w600,
             fontSize: 13,
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _PivotHistoryTile extends StatelessWidget {
-  final PivotPointModel item;
-  final VoidCallback onTap;
-  const _PivotHistoryTile({required this.item, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final tanggal = item.tanggal;
-    final tanggalStr = tanggal != null
-        ? '${tanggal.day.toString().padLeft(2, '0')}/${tanggal.month.toString().padLeft(2, '0')}/${tanggal.year}'
-        : '-';
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 42, height: 42,
-              decoration: const BoxDecoration(color: AppColors.secondarySoft, shape: BoxShape.circle),
-              child: const Icon(Icons.equalizer_rounded, color: AppColors.secondary, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Pivot Point: ${item.pivotPoint.toStringAsFixed(2)}',
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-                  const SizedBox(height: 2),
-                  Text('${assetLabel(item.asset)} • $tanggalStr',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                ],
-              ),
-            ),
-            if (item.action != null) ...[
-              ActionBadge(action: item.action!, compact: true),
-              const SizedBox(width: 4),
-            ],
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _NestHistoryTile extends StatelessWidget {
-  final NestModel item;
-  final VoidCallback onTap;
-  const _NestHistoryTile({required this.item, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final tanggal = item.tanggal;
-    final tanggalStr = tanggal != null
-        ? '${tanggal.day.toString().padLeft(2, '0')}/${tanggal.month.toString().padLeft(2, '0')}/${tanggal.year}'
-        : '-';
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 42, height: 42,
-              decoration: const BoxDecoration(color: AppColors.secondarySoft, shape: BoxShape.circle),
-              child: const Icon(Icons.compare_arrows_rounded, color: AppColors.secondary, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('Nest',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
-                  const SizedBox(height: 2),
-                  Text('${assetLabel(item.asset)} • $tanggalStr',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                ],
-              ),
-            ),
-            ActionBadge(action: item.action, compact: true),
-            const SizedBox(width: 4),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _EmasHistoryTile extends StatelessWidget {
-  final EmasFisikModel item;
-  final VoidCallback onTap;
-  const _EmasHistoryTile({required this.item, required this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    final tanggal = item.tanggal;
-    final tanggalStr = tanggal != null
-        ? '${tanggal.day.toString().padLeft(2, '0')}/${tanggal.month.toString().padLeft(2, '0')}/${tanggal.year}'
-        : '-';
-    final untung = item.profit >= 0;
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(14),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 42, height: 42,
-              decoration: BoxDecoration(
-                color: untung ? AppColors.successBg : AppColors.dangerBg,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.monetization_on_rounded,
-                color: untung ? AppColors.success : AppColors.danger,
-                size: 20,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('Profit: ${item.profit.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 14,
-                        color: untung ? AppColors.success : AppColors.danger,
-                      )),
-                  const SizedBox(height: 2),
-                  Text('${item.beratGram.toStringAsFixed(2)} gram • $tanggalStr',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
-                ],
-              ),
-            ),
-            const Icon(Icons.chevron_right_rounded, color: AppColors.textSecondary),
-          ],
         ),
       ),
     );

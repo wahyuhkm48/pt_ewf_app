@@ -1,6 +1,8 @@
 // views/main_shell.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../viewmodels/recent_history_viewmodel.dart';
 import '../widgets/custom_bottom_nav.dart';
 import 'home_page.dart';
 import 'history_page.dart';
@@ -19,22 +21,34 @@ class MainShell extends StatefulWidget {
 class _MainShellState extends State<MainShell> {
   int _currentIndex = 0;
 
-  final _pages = const [
-    HomePage(),
-    HistoryPage(),
-    ChartPage(),
-    SettingsPage(),
-  ];
+  // Dinaikkan setiap kali user selesai menghitung sesuatu, supaya tab History
+  // dibuat ulang (initState jalan lagi) dan datanya ikut ter-refresh.
+  int _historyVersion = 0;
+
+  /// Buka halaman kalkulator, lalu refresh riwayat begitu user kembali.
+  Future<void> _openCalculator(Widget page) async {
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => page));
+    if (!mounted) return;
+    setState(() => _historyVersion++);
+    context.read<RecentHistoryViewModel>().load(silent: true);
+  }
 
   @override
   Widget build(BuildContext context) {
+    final pages = [
+      HomePage(onViewAllHistory: () => setState(() => _currentIndex = 1)),
+      HistoryPage(key: ValueKey(_historyVersion)),
+      const ChartPage(),
+      const SettingsPage(),
+    ];
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: Stack(
         children: [
           IndexedStack(
             index: _currentIndex,
-            children: _pages,
+            children: pages,
           ),
           Positioned(
             left: 0,
@@ -47,18 +61,14 @@ class _MainShellState extends State<MainShell> {
                 SpeedDialAction(
                   iconAsset: 'assets/images/icons/pivot_point.png',
                   label: 'Pivot Point',
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (_) => const KonsepTransaksiPage()),
-                  ),
+                  onTap: () => _openCalculator(const KonsepTransaksiPage()),
                 ),
                 SpeedDialAction(
                   iconAsset: 'assets/images/icons/emas_fisik.png',
                   label: 'Emas Fisik',
                   onTap: () {
                     debugPrint('>>> onTap Emas Fisik jalan, context mounted: $mounted');
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const EmasFisikPage()),
-                    );
+                    _openCalculator(const EmasFisikPage());
                   },
                 ),
               ],
