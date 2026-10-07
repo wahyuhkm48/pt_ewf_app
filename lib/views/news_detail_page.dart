@@ -7,7 +7,8 @@ import '../widgets/news_fallback_cover.dart';
 
 class NewsDetailPage extends StatelessWidget {
   final NewsModel article;
-  const NewsDetailPage({super.key, required this.article});
+  final String? heroTag;
+  const NewsDetailPage({super.key, required this.article, this.heroTag});
 
   Future<void> _bukaSumberAsli(BuildContext context) async {
     final url = article.linkUrl;
@@ -34,7 +35,7 @@ class NewsDetailPage extends StatelessWidget {
             Stack(
               children: [
                 Hero(
-                  tag: 'news_image_${article.articleId}',
+                  tag: heroTag ?? 'news_image_${article.articleId}',
                   child: SizedBox(
                     height: 400, width: double.infinity,
                      child: article.imageUrl != null

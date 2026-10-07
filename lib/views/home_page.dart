@@ -2,12 +2,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'hot_news_page.dart';
+import 'news_detail_page.dart';
 import '../theme/app_colors.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/recent_history_section.dart';
-import '../viewmodels/recent_history_viewmodel.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
+import '../viewmodels/recent_history_viewmodel.dart';
 import '../utils/page_transitions.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/news_fallback_cover.dart';
@@ -15,6 +16,7 @@ import '../widgets/news_fallback_cover.dart';
 const String kNewsCombinedQuery = 'Federal Reserve OR interest rate';
 
 class HomePage extends StatefulWidget {
+  /// Dipanggil saat "view all" di Riwayat Terbaru ditekan (pindah ke tab History).
   final VoidCallback? onViewAllHistory;
   const HomePage({super.key, this.onViewAllHistory});
 
@@ -148,37 +150,47 @@ class _NewsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 280,
-      decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(16)),
-      clipBehavior: Clip.antiAlias,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 80, width: double.infinity,
-            child: article.imageUrl != null
-                ? Image.network(
-                    article.imageUrl!,
-                    fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) =>
-                        NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 32),
-                  )
-                : NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 32),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(article.sourceName, style: const TextStyle(color: Colors.white70, fontSize: 11)),
-                const SizedBox(height: 4),
-                Text(article.title, maxLines: 2, overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
-              ],
+    final heroTag = 'home_news_image_${article.articleId}';
+
+    return GestureDetector(
+      onTap: () => Navigator.of(context).push(
+        PageTransitions.heroDetail(NewsDetailPage(article: article, heroTag: heroTag)),
+      ),
+      child: Container(
+        width: 280,
+        decoration: BoxDecoration(color: AppColors.primary.withValues(alpha: 0.85), borderRadius: BorderRadius.circular(16)),
+        clipBehavior: Clip.antiAlias,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 80, width: double.infinity,
+              child: Hero(
+                tag: heroTag,
+                child: article.imageUrl != null
+                    ? Image.network(
+                        article.imageUrl!,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) =>
+                            NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 32),
+                      )
+                    : NewsFallbackCover(sourceName: article.sourceName, sourceIcon: article.sourceIcon, logoSize: 32),
+              ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(article.sourceName, style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                  const SizedBox(height: 4),
+                  Text(article.title, maxLines: 2, overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
