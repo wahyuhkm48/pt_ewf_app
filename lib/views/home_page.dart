@@ -1,4 +1,5 @@
 // views/home_screen.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'hot_news_page.dart';
@@ -9,6 +10,7 @@ import '../widgets/recent_history_section.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../viewmodels/recent_history_viewmodel.dart';
+import '../utils/greeting.dart';
 import '../utils/page_transitions.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/news_fallback_cover.dart';
@@ -25,9 +27,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  late String _greeting = greetingWib();
+  Timer? _greetingTimer;
+
   @override
   void initState() {
     super.initState();
+    // Cek tiap menit; rebuild hanya kalau sapaan benar-benar berganti
+    // (mis. app dibiarkan terbuka melewati jam 11.00)
+    _greetingTimer = Timer.periodic(const Duration(minutes: 1), (_) {
+      final baru = greetingWib();
+      if (mounted && baru != _greeting) setState(() => _greeting = baru);
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       context.read<NewsViewModel>().loadNews();
       context.read<RecentHistoryViewModel>().load();
@@ -39,6 +50,12 @@ class _HomePageState extends State<HomePage> {
       context.read<NewsViewModel>().loadNews(forceRefresh: true),
       context.read<RecentHistoryViewModel>().load(silent: true),
     ]);
+  }
+
+  @override                   
+  void dispose() {
+    _greetingTimer?.cancel();
+    super.dispose();
   }
 
   @override
@@ -64,7 +81,7 @@ class _HomePageState extends State<HomePage> {
                     children: [
                       Text('Hi $namaDepan!', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
                       const SizedBox(height: 2),
-                      const Text('Good Morning', style: TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                      Text(_greeting, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
                     ],
                   ),
                   Container(
