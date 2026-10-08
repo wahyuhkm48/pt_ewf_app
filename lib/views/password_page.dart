@@ -20,6 +20,7 @@ class _PasswordPageState extends State<PasswordPage> {
   bool _obscureNew = true;
   bool _obscureConfirm = true;
   bool _loading = false;
+  String? _errorText; // peringatan merah di bawah form (seperti di halaman Login)
 
   @override
   void dispose() {
@@ -34,18 +35,20 @@ class _PasswordPageState extends State<PasswordPage> {
   }
 
   Future<void> _changePassword() async {
+    setState(() => _errorText = null);
+
     if (_currentPasswordController.text.isEmpty ||
         _newPasswordController.text.isEmpty ||
         _confirmPasswordController.text.isEmpty) {
-      _showSnack('Semua field wajib diisi');
-      return;
-    }
-    if (_newPasswordController.text != _confirmPasswordController.text) {
-      _showSnack('Konfirmasi password tidak sama');
+      setState(() => _errorText = 'Semua field wajib diisi');
       return;
     }
     if (_newPasswordController.text.length < 8) {
-      _showSnack('Password minimal 8 karakter');
+      setState(() => _errorText = 'Password minimal 8 karakter');
+      return;
+    }
+    if (_newPasswordController.text != _confirmPasswordController.text) {
+      setState(() => _errorText = 'Konfirmasi password tidak sama');
       return;
     }
 
@@ -64,7 +67,7 @@ class _PasswordPageState extends State<PasswordPage> {
       _showSnack('Password berhasil diganti');
       Navigator.pop(context);
     } else {
-      _showSnack(auth.errorMessage ?? 'Gagal mengganti password');
+      setState(() => _errorText = auth.errorMessage ?? 'Gagal mengganti password');
     }
   }
 
@@ -108,6 +111,10 @@ class _PasswordPageState extends State<PasswordPage> {
               obscureText: _obscureConfirm,
               onToggleVisibility: () => setState(() => _obscureConfirm = !_obscureConfirm),
             ),
+            if (_errorText != null) ...[
+              const SizedBox(height: 12),
+              Text(_errorText!, style: const TextStyle(color: AppColors.danger)),
+            ],
             const SizedBox(height: 32),
             SizedBox(
               width: double.infinity,
