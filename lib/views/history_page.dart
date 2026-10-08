@@ -31,32 +31,52 @@ class _HistoryPageState extends State<HistoryPage> {
   List<NestModel> _nestHistory = [];
   List<EmasFisikModel> _emasHistory = [];
 
+  bool get _hasAnyData =>
+      _pivotHistory.isNotEmpty || _nestHistory.isNotEmpty || _emasHistory.isNotEmpty;
+
   @override
   void initState() {
     super.initState();
     _load();
   }
 
-  Future<void> _load() async {
-    setState(() {
-      _loading = true;
-      _error = null;
-    });
+  /// [silent] = true dipakai oleh tarik-ke-bawah: list lama tetap tampil
+  /// (tidak diganti spinner layar penuh), indikator refresh bawaan yang jalan.
+  Future<void> _load({bool silent = false}) async {
+    if (!silent) {
+      setState(() {
+        _loading = true;
+        _error = null;
+      });
+    }
 
     final client = context.read<ApiClient>();
     try {
-      final pivotRiwayat = await PivotPointService(client).riwayat();
-      final nestRiwayat = await NestService(client).riwayat();
-      final emasRiwayat = await EmasFisikService(client).riwayat();
+      final (pivot, nest, emas) = await (
+        PivotPointService(client).riwayat(),
+        NestService(client).riwayat(),
+        EmasFisikService(client).riwayat(),
+      ).wait;
+
+      if (!mounted) return;
       setState(() {
-        _pivotHistory = pivotRiwayat;
-        _nestHistory = nestRiwayat;
-        _emasHistory = emasRiwayat;
+        _pivotHistory = pivot;
+        _nestHistory = nest;
+        _emasHistory = emas;
+        _error = null;
       });
     } catch (e) {
-      setState(() => _error = e.toString());
+      if (!mounted) return;
+      if (silent && _hasAnyData) {
+        // refresh gagal, tapi data lama masih ada: biarkan tampil, beri tahu lewat snackbar
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal memuat ulang riwayat')),
+        );
+      } else {
+        setState(() => _error = e.toString());
+      }
     } finally {
-      setState(() => _loading = false);
+      if (mounted && !silent) setState(() => _loading = false);
     }
   }
 
@@ -105,9 +125,10 @@ class _HistoryPageState extends State<HistoryPage> {
     if (_loading) {
       return const Center(child: CircularProgressIndicator());
     }
+
     if (_error != null) {
-      return Center(
-        child: EmptyState(
+      return _refreshable(
+        EmptyState(
           icon: Icons.error_outline_rounded,
           iconSize: 48,
           title: 'Gagal memuat riwayat',
@@ -116,79 +137,86 @@ class _HistoryPageState extends State<HistoryPage> {
       );
     }
 
-    if (_tab == 0) {
-      if (_pivotHistory.isEmpty) {
-        return const Center(
-          child: EmptyState(
-            icon: Icons.folder_open_rounded,
-            iconSize: 48,
-            title: 'Belum ada riwayat perhitungan',
-            subtitle: 'Semua hasil perhitungan pivot\nakan tersimpan di sini',
-          ),
-        );
-      }
-      return RefreshIndicator(
-        onRefresh: _load,
-        child: ListView.separated(
-          itemCount: _pivotHistory.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, i) => PivotHistoryTile(
-            item: _pivotHistory[i],
+    switch (_tab) {
+      case 0:
+        return _buildList<PivotPointModel>(
+          items: _pivotHistory,
+          emptySubtitle: 'Semua hasil perhitungan pivot\nakan tersimpan di sini',
+          tileBuilder: (item) => PivotHistoryTile(
+            item: item,
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => PivotPointDetailPage(item: _pivotHistory[i])),
+              MaterialPageRoute(builder: (_) => PivotPointDetailPage(item: item)),
             ),
           ),
-        ),
-      );
-    } else if (_tab == 1) {
-      if (_nestHistory.isEmpty) {
-        return const Center(
-          child: EmptyState(
-            icon: Icons.folder_open_rounded,
-            iconSize: 48,
-            title: 'Belum ada riwayat perhitungan',
-            subtitle: 'Semua hasil perhitungan nest\nakan tersimpan di sini',
-          ),
         );
-      }
-      return RefreshIndicator(
-        onRefresh: _load,
-        child: ListView.separated(
-          itemCount: _nestHistory.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, i) => NestHistoryTile(
-            item: _nestHistory[i],
+      case 1:
+        return _buildList<NestModel>(
+          items: _nestHistory,
+          emptySubtitle: 'Semua hasil perhitungan nest\nakan tersimpan di sini',
+          tileBuilder: (item) => NestHistoryTile(
+            item: item,
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => NestDetailPage(item: _nestHistory[i])),
+              MaterialPageRoute(builder: (_) => NestDetailPage(item: item)),
             ),
           ),
-        ),
-      );
-    } else {
-      if (_emasHistory.isEmpty) {
-        return const Center(
-          child: EmptyState(
-            icon: Icons.folder_open_rounded,
-            iconSize: 48,
-            title: 'Belum ada riwayat perhitungan',
-            subtitle: 'Semua hasil perhitungan emas fisik\nakan tersimpan di sini',
-          ),
         );
-      }
-      return RefreshIndicator(
-        onRefresh: _load,
-        child: ListView.separated(
-          itemCount: _emasHistory.length,
-          separatorBuilder: (_, _) => const SizedBox(height: 10),
-          itemBuilder: (context, i) => EmasHistoryTile(
-            item: _emasHistory[i],
+      default:
+        return _buildList<EmasFisikModel>(
+          items: _emasHistory,
+          emptySubtitle: 'Semua hasil perhitungan emas fisik\nakan tersimpan di sini',
+          tileBuilder: (item) => EmasHistoryTile(
+            item: item,
             onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => EmasFisikDetailPage(item: _emasHistory[i])),
+              MaterialPageRoute(builder: (_) => EmasFisikDetailPage(item: item)),
             ),
           ),
+        );
+    }
+  }
+
+  /// List riwayat yang bisa ditarik ke bawah untuk refresh.
+  /// Kalau kosong, tampilkan EmptyState yang juga bisa di-refresh.
+  Widget _buildList<T>({
+    required List<T> items,
+    required String emptySubtitle,
+    required Widget Function(T item) tileBuilder,
+  }) {
+    if (items.isEmpty) {
+      return _refreshable(
+        EmptyState(
+          icon: Icons.folder_open_rounded,
+          iconSize: 48,
+          title: 'Belum ada riwayat perhitungan',
+          subtitle: emptySubtitle,
         ),
       );
     }
+
+    return RefreshIndicator(
+      onRefresh: () => _load(silent: true),
+      child: ListView.separated(
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemCount: items.length,
+        separatorBuilder: (_, _) => const SizedBox(height: 10),
+        itemBuilder: (context, i) => tileBuilder(items[i]),
+      ),
+    );
+  }
+
+  /// Membungkus konten tunggal (EmptyState / error) supaya tetap bisa ditarik ke bawah.
+  Widget _refreshable(Widget child) {
+    return RefreshIndicator(
+      onRefresh: () => _load(silent: true),
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: Center(child: child),
+          ),
+        ),
+      ),
+    );
   }
 }
 
