@@ -16,6 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
+  String? _error;
 
   @override
   Widget build(BuildContext context) {
@@ -128,10 +129,10 @@ class _LoginPageState extends State<LoginPage> {
                   // Password
                   PasswordField(controller: passCtrl),
 
-                  if (vm.errorMessage != null) ...[
+                  if (_error != null) ...[
                     const SizedBox(height: 12),
                     Text(
-                      vm.errorMessage!,
+                      _error!,
                       style: const TextStyle(color: AppColors.danger),
                     ),
                   ],
@@ -154,15 +155,19 @@ class _LoginPageState extends State<LoginPage> {
                               elevation: 0,
                             ),
                             onPressed: () async {
+                              setState(() => _error = null);
                               final sukses = await vm.login(
                                 emailCtrl.text,
                                 passCtrl.text,
                               );
-                              if (sukses && context.mounted) {
+                              if (!context.mounted) return;
+                              if (sukses) {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(builder: (_) => const MainShell()),
                                 );
+                              } else {
+                                setState(() => _error = vm.errorMessage);
                               }
                             },
                             child: const Text(

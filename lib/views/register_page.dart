@@ -66,15 +66,18 @@ class _RegisterPageState extends State<RegisterPage> {
       password: passCtrl.text,
     );
 
-    if (sukses && mounted) {
+    if (!mounted) return;
+    if (sukses) {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const MainShell()));
+    } else {
+      setState(() => _localError = vm.errorMessage);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
-    final errorText = _localError ?? vm.errorMessage;
+    final errorText = _localError;
 
     return Scaffold(
       backgroundColor: AppColors.background,
