@@ -84,7 +84,10 @@ class _LoginPageState extends State<LoginPage> {
 
             // ===== Konten utama form login =====
             SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 28),
+              physics: const AlwaysScrollableScrollPhysics(),
+              // padding bawah = tinggi keyboard, supaya form tetap bisa digulir
+              // ke atas keyboard (resizeToAvoidBottomInset: false)
+              padding: EdgeInsets.fromLTRB(28, 0, 28, MediaQuery.of(context).viewInsets.bottom),
               child: Column(
                 children: [
                   const SizedBox(height: 190),
