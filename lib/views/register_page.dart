@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../utils/form_errors.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/password_field.dart';
 import 'login_page.dart';
@@ -36,33 +37,22 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _submit(AuthViewModel vm) async {
     setState(() => _localError = null);
 
-    if (namaCtrl.text.trim().isEmpty ||
-        emailCtrl.text.trim().isEmpty ||
-        telpCtrl.text.trim().isEmpty ||
-        passCtrl.text.isEmpty) {
-      setState(() => _localError = 'Semua field wajib diisi');
-      return;
-    }
-
-    // buang spasi / strip, sisakan digit dan "+" di awal
-    final noTelp = telpCtrl.text.replaceAll(RegExp(r'[\s-]'), '');
-    if (!RegExp(r'^\+?[0-9]{8,15}$').hasMatch(noTelp)) {
-      setState(() => _localError = 'Nomor telepon tidak valid (8-15 digit)');
-      return;
-    }
-    if (passCtrl.text.length < 8) {
-      setState(() => _localError = 'Password minimal 8 karakter');
-      return;
-    }
-    if (passCtrl.text != confirmCtrl.text) {
-      setState(() => _localError = 'Konfirmasi password tidak sama');
+    final salah = validasiRegister(
+      nama: namaCtrl.text,
+      email: emailCtrl.text,
+      telp: telpCtrl.text,
+      password: passCtrl.text,
+      konfirmasi: confirmCtrl.text,
+    );
+    if (salah != null) {
+      setState(() => _localError = salah);
       return;
     }
 
     final sukses = await vm.register(
       namaLengkap: namaCtrl.text.trim(),
       email: emailCtrl.text.trim(),
-      noTelp: noTelp,
+      noTelp: normalisasiTelp(telpCtrl.text),
       password: passCtrl.text,
     );
 
@@ -106,8 +96,6 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
 
               SingleChildScrollView(
-                // padding bawah = tinggi keyboard, supaya kolom paling bawah
-                // tetap bisa di-scroll ke atas keyboard (form sekarang lebih panjang)
                 padding: EdgeInsets.fromLTRB(28, 0, 28, MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
                   children: [
@@ -159,7 +147,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     if (errorText != null) ...[
                       const SizedBox(height: 12),
-                      Text(errorText, style: const TextStyle(color: AppColors.danger)),
+                      SizedBox(
+                        width: double.infinity,
+                        child: Text(errorText, style: const TextStyle(color: AppColors.danger)),
+                      ),
                     ],
 
                     const SizedBox(height: 40),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/auth_viewmodel.dart';
+import '../utils/form_errors.dart';
 import '../widgets/password_field.dart';
 import 'main_shell.dart';
 import 'register_page.dart';
@@ -16,7 +17,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final emailCtrl = TextEditingController();
   final passCtrl = TextEditingController();
-  String? _error;
+  String? _error; // error milik halaman ini saja
 
   @override
   Widget build(BuildContext context) {
@@ -131,9 +132,12 @@ class _LoginPageState extends State<LoginPage> {
 
                   if (_error != null) ...[
                     const SizedBox(height: 12),
-                    Text(
-                      _error!,
-                      style: const TextStyle(color: AppColors.danger),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Text(
+                        _error!,
+                        style: const TextStyle(color: AppColors.danger),
+                      ),
                     ),
                   ],
 
@@ -155,9 +159,18 @@ class _LoginPageState extends State<LoginPage> {
                               elevation: 0,
                             ),
                             onPressed: () async {
+                              final salah = validasiLogin(
+                                email: emailCtrl.text,
+                                password: passCtrl.text,
+                              );
+                              if (salah != null) {
+                                setState(() => _error = salah);
+                                return;
+                              }
+
                               setState(() => _error = null);
                               final sukses = await vm.login(
-                                emailCtrl.text,
+                                emailCtrl.text.trim(),
                                 passCtrl.text,
                               );
                               if (!context.mounted) return;

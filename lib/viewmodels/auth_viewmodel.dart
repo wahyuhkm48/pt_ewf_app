@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import '../services/auth_service.dart';
 import '../models/employee_model.dart';
+import '../utils/form_errors.dart';
 
 class AuthViewModel extends ChangeNotifier {
   final AuthService _service;
@@ -20,7 +21,7 @@ class AuthViewModel extends ChangeNotifier {
       employee = await _service.login(email, password);
       return true;
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = pesanError(e);
       return false;
     } finally {
       isLoading = false;
@@ -47,7 +48,7 @@ class AuthViewModel extends ChangeNotifier {
       );
       return true;
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = pesanError(e);
       return false;
     } finally {
       isLoading = false;
@@ -67,7 +68,7 @@ class AuthViewModel extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = pesanError(e);
       notifyListeners();
       return false;
     }
@@ -79,7 +80,7 @@ class AuthViewModel extends ChangeNotifier {
       notifyListeners();
       return true;
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = pesanError(e);
       notifyListeners();
       return false;
     }
@@ -93,7 +94,7 @@ class AuthViewModel extends ChangeNotifier {
       await _service.changePassword(currentPassword: currentPassword, newPassword: newPassword);
       return true;
     } catch (e) {
-      errorMessage = e.toString();
+      errorMessage = pesanError(e);
       notifyListeners();
       return false;
     }

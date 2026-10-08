@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/auth_viewmodel.dart';
+import '../utils/form_errors.dart';
 
 class PasswordPage extends StatefulWidget {
   const PasswordPage({super.key});
@@ -37,18 +38,13 @@ class _PasswordPageState extends State<PasswordPage> {
   Future<void> _changePassword() async {
     setState(() => _errorText = null);
 
-    if (_currentPasswordController.text.isEmpty ||
-        _newPasswordController.text.isEmpty ||
-        _confirmPasswordController.text.isEmpty) {
-      setState(() => _errorText = 'Semua field wajib diisi');
-      return;
-    }
-    if (_newPasswordController.text.length < 8) {
-      setState(() => _errorText = 'Password minimal 8 karakter');
-      return;
-    }
-    if (_newPasswordController.text != _confirmPasswordController.text) {
-      setState(() => _errorText = 'Konfirmasi password tidak sama');
+    final salah = validasiGantiPassword(
+      sekarang: _currentPasswordController.text,
+      baru: _newPasswordController.text,
+      konfirmasi: _confirmPasswordController.text,
+    );
+    if (salah != null) {
+      setState(() => _errorText = salah);
       return;
     }
 
