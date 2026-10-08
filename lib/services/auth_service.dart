@@ -12,14 +12,16 @@ class AuthService {
     return EmployeeModel.fromJson(res['employee']);
   }
 
-  Future<EmployeeModel> register({
+    Future<EmployeeModel> register({
     required String namaLengkap,
     required String email,
+    required String noTelp,
     required String password,
   }) async {
     final res = await _client.post('/register', {
       'nama_lengkap': namaLengkap,
       'email': email,
+      'no_telp': noTelp,
       'password': password,
       'password_confirmation': password,
     }, withAuth: false);

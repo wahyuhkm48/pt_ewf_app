@@ -31,6 +31,7 @@ class AuthViewModel extends ChangeNotifier {
   Future<bool> register({
     required String namaLengkap,
     required String email,
+    required String noTelp,
     required String password,
   }) async {
     isLoading = true;
@@ -38,7 +39,12 @@ class AuthViewModel extends ChangeNotifier {
     notifyListeners();
 
     try {
-      employee = await _service.register(namaLengkap: namaLengkap, email: email, password: password);
+      employee = await _service.register(
+        namaLengkap: namaLengkap,
+        email: email,
+        noTelp: noTelp,
+        password: password,
+      );
       return true;
     } catch (e) {
       errorMessage = e.toString();

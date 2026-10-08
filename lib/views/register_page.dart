@@ -1,5 +1,6 @@
 // views/register_page.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../viewmodels/auth_viewmodel.dart';
@@ -16,6 +17,7 @@ class RegisterPage extends StatefulWidget {
 class _RegisterPageState extends State<RegisterPage> {
   final namaCtrl = TextEditingController();
   final emailCtrl = TextEditingController();
+  final telpCtrl = TextEditingController();
   final passCtrl = TextEditingController();
   final confirmCtrl = TextEditingController();
 
@@ -25,6 +27,7 @@ class _RegisterPageState extends State<RegisterPage> {
   void dispose() {
     namaCtrl.dispose();
     emailCtrl.dispose();
+    telpCtrl.dispose();
     passCtrl.dispose();
     confirmCtrl.dispose();
     super.dispose();
@@ -33,8 +36,18 @@ class _RegisterPageState extends State<RegisterPage> {
   Future<void> _submit(AuthViewModel vm) async {
     setState(() => _localError = null);
 
-    if (namaCtrl.text.trim().isEmpty || emailCtrl.text.trim().isEmpty || passCtrl.text.isEmpty) {
+    if (namaCtrl.text.trim().isEmpty ||
+        emailCtrl.text.trim().isEmpty ||
+        telpCtrl.text.trim().isEmpty ||
+        passCtrl.text.isEmpty) {
       setState(() => _localError = 'Semua field wajib diisi');
+      return;
+    }
+
+    // buang spasi / strip, sisakan digit dan "+" di awal
+    final noTelp = telpCtrl.text.replaceAll(RegExp(r'[\s-]'), '');
+    if (!RegExp(r'^\+?[0-9]{8,15}$').hasMatch(noTelp)) {
+      setState(() => _localError = 'Nomor telepon tidak valid (8-15 digit)');
       return;
     }
     if (passCtrl.text.length < 8) {
@@ -49,6 +62,7 @@ class _RegisterPageState extends State<RegisterPage> {
     final sukses = await vm.register(
       namaLengkap: namaCtrl.text.trim(),
       email: emailCtrl.text.trim(),
+      noTelp: noTelp,
       password: passCtrl.text,
     );
 
@@ -89,7 +103,9 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
 
               SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 28),
+                // padding bawah = tinggi keyboard, supaya kolom paling bawah
+                // tetap bisa di-scroll ke atas keyboard (form sekarang lebih panjang)
+                padding: EdgeInsets.fromLTRB(28, 0, 28, MediaQuery.of(context).viewInsets.bottom),
                 child: Column(
                   children: [
                     const SizedBox(height: 150),
@@ -113,6 +129,19 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: emailCtrl,
                       decoration: const InputDecoration(
                         labelText: 'Email',
+                        labelStyle: TextStyle(color: AppColors.textSecondary),
+                        enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider)),
+                        focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+
+                    TextField(
+                      controller: telpCtrl,
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9+\s-]'))],
+                      decoration: const InputDecoration(
+                        labelText: 'Phone Number',
                         labelStyle: TextStyle(color: AppColors.textSecondary),
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider)),
                         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
