@@ -57,7 +57,7 @@ class _ChartPageState extends State<ChartPage> {
 
     setState(() => _isExporting = true);
     try {
-      await HistoriExcelExporter.export(namaAset: _tabs[_selectedTab], data: data);
+      await HistoriExcelExporter.export(namaProduk: _tabs[_selectedTab], data: data);
     } catch (_) {
       messenger.showSnackBar(
         const SnackBar(content: Text('Gagal membuat file Excel, coba lagi')),

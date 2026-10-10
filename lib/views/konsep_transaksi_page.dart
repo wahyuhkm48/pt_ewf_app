@@ -297,7 +297,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
               const Text('Data Pasar (Input)',
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
               const SizedBox(height: 4),
-              const Text('Pilih mode kalkulasi, tanggal & aset',
+              const Text('Pilih mode kalkulasi, tanggal & produk',
                   style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
               const SizedBox(height: 16),
 
@@ -454,8 +454,8 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                 const SizedBox(height: 14),
               ],
 
-              // Aset
-              const Text('Aset', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              // Produk
+              const Text('Produk', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
               const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.all(4),

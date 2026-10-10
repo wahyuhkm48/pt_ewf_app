@@ -9,7 +9,7 @@ class HistoriExcelExporter {
   /// Membuat file .xlsx dari [data] lalu membuka share sheet
   /// (user bisa "Simpan ke File", Google Drive, WhatsApp, dll).
   static Future<void> export({
-    required String namaAset,
+    required String namaProduk,
     required List<HistoriDataModel> data,
   }) async {
     final excel = Excel.createExcel();
@@ -17,9 +17,9 @@ class HistoriExcelExporter {
     // Ganti nama sheet bawaan ("Sheet1") jadi nama aset
     final defaultSheet = excel.getDefaultSheet();
     if (defaultSheet != null) {
-      excel.rename(defaultSheet, namaAset);
+      excel.rename(defaultSheet, namaProduk);
     }
-    final sheet = excel[namaAset];
+    final sheet = excel[namaProduk];
     sheet.setColumnWidth(0, 16.0);
 
     // Header
@@ -48,7 +48,7 @@ class HistoriExcelExporter {
     }
 
     final dir = await getTemporaryDirectory();
-    final namaFile = 'histori_${namaAset.toLowerCase()}_${_stamp(DateTime.now())}.xlsx';
+    final namaFile = 'histori_${namaProduk.toLowerCase()}_${_stamp(DateTime.now())}.xlsx';
     final file = File('${dir.path}/$namaFile');
     await file.writeAsBytes(bytes, flush: true);
 
@@ -59,8 +59,8 @@ class HistoriExcelExporter {
           mimeType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
         ),
       ],
-      subject: 'Data Historis $namaAset',
-      text: 'Data Historis $namaAset - EQUITYWORLD',
+      subject: 'Data Historis $namaProduk',
+      text: 'Data Historis $namaProduk - EQUITYWORLD',
     );
   }
 
