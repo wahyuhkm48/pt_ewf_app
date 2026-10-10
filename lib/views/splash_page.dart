@@ -72,15 +72,15 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _runSequence() async {
-    await Future.delayed(const Duration(milliseconds: 400));
+    await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
     setState(() => _scattered = true);
 
-    await Future.delayed(const Duration(milliseconds: 700));
+    await Future.delayed(const Duration(milliseconds: 1000));
     if (!mounted) return;
     setState(() => _showLogo = true);
 
-    await Future.delayed(const Duration(milliseconds: 1400));
+    await Future.delayed(const Duration(milliseconds: 2500));
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
