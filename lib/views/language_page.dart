@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class LanguagePage extends StatefulWidget {
   const LanguagePage({super.key});
@@ -41,7 +42,7 @@ class _LanguagePageState extends State<LanguagePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF9FAFB),
+      backgroundColor: AppColors.surface,
 
       appBar: AppBar(
         title: const Text('Bahasa'),
@@ -62,24 +63,16 @@ class _LanguagePageState extends State<LanguagePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // ================= HEADER =================
-                    const Text(
+                    Text(
                       'Pilih Bahasa',
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w800,
-                        color: Color(0xFF1F2937),
-                      ),
+                      style: AppTextStyles.h2(),
                     ),
 
                     const SizedBox(height: 6),
 
                     Text(
                       'Pilih bahasa yang ingin kamu gunakan di aplikasi.',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey.shade600,
-                        height: 1.4,
-                      ),
+                      style: AppTextStyles.bodyMd().copyWith(height: 1.4),
                     ),
 
                     const SizedBox(height: 24),
@@ -113,11 +106,7 @@ class _LanguagePageState extends State<LanguagePage> {
                       child: Text(
                         'Perubahan bahasa akan diterapkan ke seluruh aplikasi.',
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 13,
-                          color: Colors.grey.shade600,
-                          height: 1.4,
-                        ),
+                        style: AppTextStyles.bodySm().copyWith(height: 1.4),
                       ),
                     ),
                   ],
@@ -132,7 +121,7 @@ class _LanguagePageState extends State<LanguagePage> {
                 color: Colors.white,
                 border: Border(
                   top: BorderSide(
-                    color: Color(0xFFE5E7EB),
+                    color: AppColors.divider,
                     width: 1,
                   ),
                 ),
@@ -145,19 +134,16 @@ class _LanguagePageState extends State<LanguagePage> {
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFFF7A00),
+                    backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(14),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Simpan Perubahan',
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    style: AppTextStyles.labelLg(color: Colors.white),
                   ),
                 ),
               ),
@@ -217,13 +203,13 @@ class _LanguageTile extends StatelessWidget {
           ),
           decoration: BoxDecoration(
             color: selected
-                ? const Color(0xFFFFF4EA)
+                ? AppColors.primaryTint
                 : Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: selected
-                  ? const Color(0xFFFF7A00)
-                  : const Color(0xFFE5E7EB),
+                  ? AppColors.primary
+                  : AppColors.divider,
               width: selected ? 1.5 : 1,
             ),
             boxShadow: [
@@ -244,7 +230,7 @@ class _LanguageTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: selected
                       ? Colors.white
-                      : const Color(0xFFF5F6F8),
+                      : AppColors.surface,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Text(
@@ -262,19 +248,12 @@ class _LanguageTile extends StatelessWidget {
                   children: [
                     Text(
                       option.name,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF1F2937),
-                      ),
+                      style: AppTextStyles.labelLg(),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       option.subtitle,
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey.shade600,
-                      ),
+                      style: AppTextStyles.caption(),
                     ),
                   ],
                 ),
@@ -290,12 +269,12 @@ class _LanguageTile extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: selected
-                      ? const Color(0xFFFF7A00)
+                      ? AppColors.primary
                       : Colors.transparent,
                   border: Border.all(
                     color: selected
-                        ? const Color(0xFFFF7A00)
-                        : const Color(0xFFD1D5DB),
+                        ? AppColors.primary
+                        : AppColors.divider,
                     width: 2,
                   ),
                 ),
@@ -339,8 +318,8 @@ class _GlobeIllustration extends StatelessWidget {
               shape: BoxShape.circle,
               gradient: LinearGradient(
                 colors: [
-                  Color(0xFF64C7F0),
-                  Color(0xFF4389D8),
+                  AppColors.globeLight,
+                  AppColors.globeDark,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -359,7 +338,7 @@ class _GlobeIllustration extends StatelessWidget {
             top: 8,
             child: _LanguageBubble(
               text: 'ID',
-              color: Color(0xFFFF7A00),
+              color: AppColors.primary
             ),
           ),
 
@@ -369,7 +348,7 @@ class _GlobeIllustration extends StatelessWidget {
             bottom: 8,
             child: _LanguageBubble(
               text: 'EN',
-              color: Color(0xFF4389D8),
+              color: AppColors.globeDark,
             ),
           ),
         ],
@@ -414,11 +393,7 @@ class _LanguageBubble extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 12,
-          fontWeight: FontWeight.w800,
-        ),
+        style: AppTextStyles.labelSm(color: Colors.white),
       ),
     );
   }

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../models/news_model.dart';
 import '../widgets/news_fallback_cover.dart';
 
@@ -52,7 +53,7 @@ class NewsDetailPage extends StatelessWidget {
                   left: 0, right: 0, bottom: 0,
                   child: Container(
                     height: 160,
-                    decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, Colors.black87])),
+                    decoration: const BoxDecoration(gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, AppColors.overlayDark])),
                   ),
                 ),
                 Positioned(
@@ -65,7 +66,7 @@ class NewsDetailPage extends StatelessWidget {
                 ),
                 Positioned(
                   left: 20, right: 20, bottom: 20,
-                  child: Text(article.title, style: const TextStyle(color: Colors.white, fontSize: 26, fontWeight: FontWeight.bold, height: 1.2)),
+                  child: Text(article.title, style: AppTextStyles.h1(color: Colors.white).copyWith(height: 1.2)),
                 ),
               ],
             ),
@@ -76,16 +77,16 @@ class NewsDetailPage extends StatelessWidget {
                   CircleAvatar(
                     radius: 26, backgroundColor: AppColors.divider,
                     child: Text(article.sourceName.isNotEmpty ? article.sourceName[0].toUpperCase() : '?',
-                        style: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold, fontSize: 18)),
+                        style: AppTextStyles.h3(color: AppColors.textSecondary)),
                   ),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(article.sourceName, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        Text(article.sourceName, style: AppTextStyles.h3()),
                         Text(article.pubDate != null ? _formatTanggal(article.pubDate!) : 'Sumber berita',
-                            style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                            style: AppTextStyles.bodySm()),
                       ],
                     ),
                   ),
@@ -95,7 +96,7 @@ class NewsDetailPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
               child: Text(article.description ?? 'Tidak ada deskripsi tersedia untuk berita ini.',
-                  style: const TextStyle(fontSize: 16, height: 1.5, color: AppColors.textPrimary)),
+                  style: AppTextStyles.bodyLg(color: AppColors.textPrimary).copyWith(height: 1.5)),
             ),
             if (article.linkUrl != null && article.linkUrl!.isNotEmpty)
               Padding(

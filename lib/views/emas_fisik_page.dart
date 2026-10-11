@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../viewmodels/emas_fisik_viewmodel.dart';
 import '../widgets/education_sections.dart';
 
@@ -102,8 +103,8 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
                       children: [
                         Image.asset('assets/images/icons/emas_fisik.png', width: 28, height: 28),
                         const SizedBox(width: 10),
-                        const Text('Emas Fisik',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        Text('Emas Fisik',
+                            style: AppTextStyles.h3()),
                       ],
                     ),
                   ],
@@ -112,25 +113,25 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
               const SizedBox(height: 24),
               const EmasFisikExplainer(),
               const SizedBox(height: 20),
-              const Text('Input Data',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+              Text('Input Data',
+                  style: AppTextStyles.h3(color: AppColors.primary)),
               const SizedBox(height: 12),
 
               if (vm.isLoadingHarga)
-                const Padding(
+                Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
                   child: Row(
                     children: [
                       SizedBox(width: 16, height: 16, child: CircularProgressIndicator(strokeWidth: 2)),
                       SizedBox(width: 10),
-                      Text('Memuat kurs terkini...', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                      Text('Memuat kurs terkini...', style: AppTextStyles.bodySm()),
                     ],
                   ),
                 ),
               if (vm.errorHarga != null)
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Text(vm.errorHarga!, style: const TextStyle(color: Colors.red, fontSize: 13)),
+                  child: Text(vm.errorHarga!, style: AppTextStyles.bodySm(color: AppColors.danger)),
                 ),
 
               _InputField(label: 'Harga Beli (USD / toz)', controller: _hargaBeliController, hint: 'Contoh: 2.500'),
@@ -152,7 +153,7 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
                 child: ElevatedButton.icon(
                   onPressed: _hitung,
                   icon: const Icon(Icons.calculate_rounded, color: Colors.white),
-                  label: const Text('Hitung', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                  label: Text('Hitung', style: AppTextStyles.labelLg(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -164,13 +165,13 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
               if (vm.errorMessage != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
-                  child: Text(vm.errorMessage!, style: const TextStyle(color: Colors.red, fontSize: 13)),
+                  child: Text(vm.errorMessage!, style: AppTextStyles.bodySm(color: AppColors.danger)),
                 ),
 
               if (result != null) ...[
                 const SizedBox(height: 28),
-                const Text('Hasil Perhitungan',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+                Text('Hasil Perhitungan',
+                    style: AppTextStyles.h3(color: AppColors.primary)),
                 const SizedBox(height: 12),
                 _ResultCard(number: 1, title: 'HHB (Harga Hitung Beli)', formula: 'HB × Kurs ÷ 31,1',
                     value: 'Rp ${_formatNumber(result.hhb)}', valueColor: AppColors.primary),
@@ -180,14 +181,14 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
                 const SizedBox(height: 12),
                 _ResultCard(number: 3, title: 'Selisih (HHJ - HHB)', formula: 'HHJ - HHB',
                     value: '${result.selisih >= 0 ? '+' : ''}Rp ${_formatNumber(result.selisih)}',
-                    valueColor: result.selisih >= 0 ? AppColors.success : Colors.red),
+                    valueColor: result.selisih >= 0 ? AppColors.success : AppColors.danger),
                 const SizedBox(height: 12),
                 _ResultCard(number: 4, title: 'Berat Emas (Gram)', formula: 'Modal ÷ HHB',
                     value: '${_formatDecimal(result.beratGram)} gram', valueColor: AppColors.primary),
                 const SizedBox(height: 12),
                 _ResultCard(number: 5, title: 'Keuntungan', formula: 'Selisih × Gram',
                     value: '${result.profit >= 0 ? '+' : ''}Rp ${_formatNumber(result.profit)}',
-                    valueColor: result.profit >= 0 ? AppColors.success : Colors.red),
+                    valueColor: result.profit >= 0 ? AppColors.success : AppColors.danger),
                 const SizedBox(height: 16),
                 EmasFisikReadingCard(
                   selisih: result.selisih,
@@ -222,7 +223,7 @@ class _InputField extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(child: Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary))),
+          Expanded(child: Text(label, style: AppTextStyles.labelBase())),
           SizedBox(
             width: 130,
             child: TextField(
@@ -231,11 +232,11 @@ class _InputField extends StatelessWidget {
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
               textAlign: TextAlign.right,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15, color: readOnly ? AppColors.textSecondary : AppColors.textPrimary),
+              style: AppTextStyles.labelLg(color: readOnly ? AppColors.textSecondary : AppColors.textPrimary),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hint,
-                hintStyle: const TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.normal),
+                hintStyle: AppTextStyles.bodyMd(),
               ),
             ),
           ),
@@ -262,19 +263,19 @@ class _ResultCard extends StatelessWidget {
       child: Row(
         children: [
           CircleAvatar(radius: 16, backgroundColor: AppColors.primary,
-              child: Text('$number', style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold))),
+              child: Text('$number', style: AppTextStyles.labelBase(color: Colors.white))),
           const SizedBox(width: 14),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14, color: AppColors.textPrimary)),
+                Text(title, style: AppTextStyles.labelBase()),
                 const SizedBox(height: 2),
-                Text(formula, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                Text(formula, style: AppTextStyles.caption()),
               ],
             ),
           ),
-          Text(value, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: valueColor)),
+          Text(value, style: AppTextStyles.labelLg(color: valueColor)),
         ],
       ),
     );

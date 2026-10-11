@@ -1,5 +1,6 @@
 // views/splash_page.dart
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 import 'onboarding_page.dart';
 
 class _BubbleSpec {
@@ -30,9 +31,9 @@ class _SplashPageState extends State<SplashPage> {
   bool _scattered = false;
   bool _showLogo = false;
 
-  static const _darkOrange = Color(0xFFC25800);
-  static const _mainOrange = Color(0xFFEC700F);
-  static const _lightOrange = Color(0xFFFF8D46);
+  static const _darkOrange = AppColors.primaryDeep;
+  static const _mainOrange = AppColors.primary;
+  static const _lightOrange = AppColors.primaryLight;
 
   // Urutan list = urutan layer (belakang -> depan), sesuai spesifikasi kamu.
   static const List<_BubbleSpec> _bubbles = [

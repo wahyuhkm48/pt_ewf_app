@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../viewmodels/pivot_point_viewmodel.dart';
 import '../viewmodels/nest_viewmodel.dart';
 import '../models/pivot_point_model.dart';
@@ -218,7 +219,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+        Text(label, style: AppTextStyles.labelMd(),),
         const SizedBox(height: 6),
         Container(
           decoration: BoxDecoration(
@@ -230,10 +231,10 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
             controller: controller,
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]'))],
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary),
+            style: AppTextStyles.labelBase(),
             decoration: InputDecoration(
               hintText: hint,
-              hintStyle: const TextStyle(fontSize: 14, color: AppColors.textSecondary, fontWeight: FontWeight.w400),
+              hintStyle: AppTextStyles.bodyMd(),
               border: InputBorder.none,
               contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
             ),
@@ -285,8 +286,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                       children: [
                         Image.asset('assets/images/icons/pivot_point.png', width: 28, height: 28),
                         const SizedBox(width: 10),
-                        const Text('Konsep Transaksi',
-                            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        Text('Konsep Transaksi', style: AppTextStyles.h3()),
                       ],
                     ),
                   ],
@@ -294,16 +294,15 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
               ),
               const SizedBox(height: 24),
 
-              const Text('Data Pasar (Input)',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+              Text('Data Pasar (Input)',
+                  style: AppTextStyles.h3(color: AppColors.primary)),
               const SizedBox(height: 4),
-              const Text('Pilih mode kalkulasi, tanggal & produk',
-                  style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+              Text('Pilih mode kalkulasi, tanggal & produk',
+                  style: AppTextStyles.bodySm()),
               const SizedBox(height: 16),
 
               // Mode: Pivot Point / Nest
-              const Text('Mode Kalkulasi',
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              Text('Mode Kalkulasi', style: AppTextStyles.labelMd(),),
               const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.all(4),
@@ -323,11 +322,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                             borderRadius: BorderRadius.circular(26),
                           ),
                           alignment: Alignment.center,
-                          child: Text(label,
-                              style: TextStyle(
-                                  color: selected ? Colors.white : AppColors.textSecondary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13)),
+                          child: Text(label, style: AppTextStyles.labelMd(color: selected ? Colors.white : AppColors.textSecondary)),
                         ),
                       ),
                     );
@@ -343,7 +338,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
               const SizedBox(height: 14),
 
               // Sumber Data: Otomatis (dari pasar) / Manual (input sendiri)
-              const Text('Sumber Data', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              Text('Sumber Data', style: AppTextStyles.labelMd(),),
               const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.all(3),
@@ -369,11 +364,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                             borderRadius: BorderRadius.circular(22),
                           ),
                           alignment: Alignment.center,
-                          child: Text(label,
-                              style: TextStyle(
-                                  color: selected ? AppColors.primary : AppColors.textSecondary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12)),
+                          child: Text(label, style: AppTextStyles.labelSm(color: selected ? AppColors.primary : AppColors.textSecondary)),
                         ),
                       ),
                     );
@@ -384,7 +375,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
 
               if (_sumberData == _SumberData.otomatis) ...[
                 // Tanggal
-                const Text('Tanggal', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                Text('Tanggal', style: AppTextStyles.labelMd(),),
                 const SizedBox(height: 6),
                 GestureDetector(
                   onTap: _pilihTanggal,
@@ -399,7 +390,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(_formatDate(_selectedDate),
-                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                            style: AppTextStyles.labelBase(),),
                         const Icon(Icons.calendar_today_outlined, size: 18, color: AppColors.textSecondary),
                       ],
                     ),
@@ -427,7 +418,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                       const SizedBox(width: 6),
                       Text(
                         _showOpenManual ? 'Sembunyikan Open' : 'Tambah Open (opsional)',
-                        style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.primary),
+                        style: AppTextStyles.labelSm(color: AppColors.primary),
                       ),
                     ],
                   ),
@@ -436,9 +427,9 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                   const SizedBox(height: 10),
                   _numberField(label: 'Open', controller: _openCtrl, hint: 'cth. 2338.00'),
                   const SizedBox(height: 4),
-                  const Text(
+                  Text(
                     'Diisi supaya muncul sinyal BUY/SELL. Kalau dikosongkan, hanya tabel level yang tampil.',
-                    style: TextStyle(fontSize: 11, height: 1.4, color: AppColors.textSecondary),
+                    style: AppTextStyles.micro().copyWith(height: 1.4),
                   ),
                 ],
                 const SizedBox(height: 14),
@@ -455,7 +446,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
               ],
 
               // Produk
-              const Text('Produk', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+              Text('Produk', style: AppTextStyles.labelMd(),),
               const SizedBox(height: 6),
               Container(
                 padding: const EdgeInsets.all(4),
@@ -474,11 +465,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                             borderRadius: BorderRadius.circular(26),
                           ),
                           alignment: Alignment.center,
-                          child: Text(entry.value,
-                              style: TextStyle(
-                                  color: selected ? Colors.white : AppColors.textSecondary,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 13)),
+                          child: Text(entry.value, style: AppTextStyles.labelMd(color: selected ? Colors.white : AppColors.textSecondary)),
                         ),
                       ),
                     );
@@ -495,7 +482,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                           width: 18, height: 18,
                           child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
                       : const Icon(Icons.calculate_rounded, color: Colors.white),
-                  label: const Text('Hitung', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
+                  label: Text('Hitung', style: AppTextStyles.labelLg(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
                     padding: const EdgeInsets.symmetric(vertical: 16),
@@ -507,7 +494,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
               if (errorMessage != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 12),
-                  child: Text(errorMessage, style: const TextStyle(color: AppColors.danger, fontSize: 13)),
+                  child: Text(errorMessage, style: AppTextStyles.bodySm(color: AppColors.danger)),
                 ),
 
               if (_mode == _KalkulatorMode.pivotPoint && pivotResult != null) ..._buildPivotPointResult(pivotResult),
@@ -523,8 +510,8 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
   List<Widget> _buildPivotPointResult(PivotPointModel result) {
     return [
       const SizedBox(height: 28),
-      const Text('Hasil Pivot Point',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+      Text('Hasil Pivot Point',
+          style: AppTextStyles.h3(color: AppColors.primary)),
       const SizedBox(height: 12),
 
       if (result.action != null) ...[
@@ -572,8 +559,8 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
   List<Widget> _buildNestResult(NestModel result) {
     return [
       const SizedBox(height: 28),
-      const Text('Hasil Nest',
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.primary)),
+      Text('Hasil Nest',
+          style: AppTextStyles.h3(color: AppColors.primary)),
       const SizedBox(height: 12),
 
       ActionBadge(action: result.action),

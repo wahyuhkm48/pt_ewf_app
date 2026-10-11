@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'hot_news_page.dart';
 import 'news_detail_page.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/recent_history_section.dart';
 import '../models/news_model.dart';
@@ -79,9 +80,9 @@ class _HomePageState extends State<HomePage> {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Hi $namaDepan!', style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                      Text('Hi $namaDepan!', style: AppTextStyles.h2()),
                       const SizedBox(height: 2),
-                      Text(_greeting, style: const TextStyle(fontSize: 14, color: AppColors.textSecondary)),
+                      Text(_greeting, style: AppTextStyles.bodyMd()),
                     ],
                   ),
                   Container(
@@ -101,10 +102,10 @@ class _HomePageState extends State<HomePage> {
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text('Welcome!', style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                        children: [
+                          Text('Welcome!', style: AppTextStyles.labelLg()),
                           SizedBox(height: 6),
-                          Text("Let's schedule your projects", style: TextStyle(fontSize: 13, color: AppColors.textPrimary)),
+                          Text("Let's schedule your projects", style: AppTextStyles.bodySm(color: AppColors.textPrimary)),
                         ],
                       ),
                     ),
@@ -162,10 +163,10 @@ class _SectionHeader extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(title, style: const TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+        Text(title, style: AppTextStyles.labelLg()),
         GestureDetector(
           onTap: onViewAll,
-          child: const Text('view all', style: TextStyle(fontSize: 13, color: AppColors.primary, fontWeight: FontWeight.w600)),
+          child: Text('view all', style: AppTextStyles.labelMd(color: AppColors.primary)),
         ),
       ],
     );
@@ -210,10 +211,10 @@ class _NewsCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(article.sourceName, style: const TextStyle(color: Colors.white70, fontSize: 11)),
+                  Text(article.sourceName, style: AppTextStyles.micro(color: Colors.white70)),
                   const SizedBox(height: 4),
                   Text(article.title, maxLines: 2, overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
+                      style: AppTextStyles.labelMd(color: Colors.white),),
                 ],
               ),
             ),

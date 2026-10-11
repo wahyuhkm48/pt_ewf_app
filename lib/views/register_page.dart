@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../utils/form_errors.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/password_field.dart';
@@ -100,16 +101,16 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Column(
                   children: [
                     const SizedBox(height: 150),
-                    const Text('Sign Up', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    Text('Sign Up', style: AppTextStyles.h1()),
                     const SizedBox(height: 6),
-                    const Text('Create an account', style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                    Text('Create an account', style: AppTextStyles.bodySm()),
                     const SizedBox(height: 32),
 
                     TextField(
                       controller: namaCtrl,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Full Name',
-                        labelStyle: TextStyle(color: AppColors.textSecondary),
+                        labelStyle: AppTextStyles.bodyMd(),
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider)),
                         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
                       ),
@@ -118,9 +119,9 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     TextField(
                       controller: emailCtrl,
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Email',
-                        labelStyle: TextStyle(color: AppColors.textSecondary),
+                        labelStyle: AppTextStyles.bodyMd(),
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider)),
                         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
                       ),
@@ -131,9 +132,9 @@ class _RegisterPageState extends State<RegisterPage> {
                       controller: telpCtrl,
                       keyboardType: TextInputType.phone,
                       inputFormatters: [FilteringTextInputFormatter.allow(RegExp(r'[0-9+\s-]'))],
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         labelText: 'Phone Number',
-                        labelStyle: TextStyle(color: AppColors.textSecondary),
+                        labelStyle: AppTextStyles.bodyMd(),
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider)),
                         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
                       ),
@@ -149,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(height: 12),
                       SizedBox(
                         width: double.infinity,
-                        child: Text(errorText, style: const TextStyle(color: AppColors.danger)),
+                        child: Text(errorText, style: AppTextStyles.bodyMd(color: AppColors.danger)),
                       ),
                     ],
 
@@ -168,7 +169,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 elevation: 0,
                               ),
                               onPressed: () => _submit(vm),
-                              child: const Text('Sign Up', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                              child: Text('Sign Up', style: AppTextStyles.labelLg(color: Colors.white)),
                             ),
                     ),
                     const SizedBox(height: 16),
@@ -178,11 +179,11 @@ class _RegisterPageState extends State<RegisterPage> {
                         MaterialPageRoute(builder: (_) => const LoginPage()),
                       ),
                       child: RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                           text: 'Already have an account? ',
-                          style: TextStyle(color: AppColors.textSecondary, fontSize: 13),
+                          style: AppTextStyles.bodySm(),
                           children: [
-                            TextSpan(text: 'Login', style: TextStyle(color: AppColors.textPrimary, fontWeight: FontWeight.bold)),
+                            TextSpan(text: 'Login', style: AppTextStyles.labelMd()),
                           ],
                         ),
                       ),

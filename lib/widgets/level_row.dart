@@ -1,6 +1,7 @@
 // widgets/level_row.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class LevelRow extends StatelessWidget {
   final String label;
@@ -32,21 +33,12 @@ class LevelRow extends StatelessWidget {
           Expanded(
             child: Text(
               label,
-              style: TextStyle(
-                fontSize: isMidpoint ? 12 : 14,
-                fontWeight: isMidpoint ? FontWeight.w400 : FontWeight.w600,
-                color: isMidpoint ? AppColors.textSecondary : AppColors.textPrimary,
-                fontStyle: isMidpoint ? FontStyle.italic : FontStyle.normal,
-              ),
+              style: isMidpoint ? AppTextStyles.caption().copyWith(fontStyle: FontStyle.italic) : AppTextStyles.labelBase(),
             ),
           ),
           Text(
             value,
-            style: TextStyle(
-              fontSize: isMidpoint ? 13 : 15,
-              fontWeight: FontWeight.bold,
-              color: isMidpoint ? AppColors.textSecondary : AppColors.textPrimary,
-            ),
+            style: isMidpoint ? AppTextStyles.bodySm() : AppTextStyles.labelLg().copyWith(fontWeight: FontWeight.bold),
           ),
         ],
       ),

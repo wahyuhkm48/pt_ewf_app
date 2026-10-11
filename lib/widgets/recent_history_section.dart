@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/recent_history_item.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../viewmodels/recent_history_viewmodel.dart';
 import '../views/emas_fisik_detail_page.dart';
 import '../views/nest_detail_page.dart';
@@ -24,16 +25,16 @@ class RecentHistorySection extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'Riwayat Terbaru',
-              style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              style: AppTextStyles.labelLg(),
             ),
             if (onViewAll != null)
               GestureDetector(
                 onTap: onViewAll,
-                child: const Text(
+                child: Text(
                   'view all',
-                  style: TextStyle(fontSize: 13, color: AppColors.primary, fontWeight: FontWeight.w600),
+                  style: AppTextStyles.labelMd(color: AppColors.primary),
                 ),
               ),
           ],

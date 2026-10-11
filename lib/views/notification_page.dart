@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
@@ -41,7 +43,7 @@ class _NotificationPageState extends State<NotificationPage> {
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFF1E6),
+              color: AppColors.primaryTint,
               borderRadius: BorderRadius.circular(14),
             ),
             child: Row(
@@ -50,30 +52,30 @@ class _NotificationPageState extends State<NotificationPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
+                      Text(
                         'Enable All Notifications',
-                        style: TextStyle(fontWeight: FontWeight.w700, fontSize: 15),
+                        style: AppTextStyles.labelLg(),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         'Receive all notifications from the app',
-                        style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                        style: AppTextStyles.caption(),
                       ),
                     ],
                   ),
                 ),
                 Switch(
                   value: _enableAll,
-                  activeThumbColor: Colors.orange,
+                  activeThumbColor: AppColors.primary,
                   onChanged: _toggleAll,
                 ),
               ],
             ),
           ),
           const SizedBox(height: 24),
-          const Text(
+          Text(
             'Notification Settings',
-            style: TextStyle(fontWeight: FontWeight.w700, fontSize: 14, color: Colors.orange),
+            style: AppTextStyles.labelBase(color: AppColors.primary),
           ),
           const SizedBox(height: 12),
           _NotificationTile(
@@ -134,23 +136,23 @@ class _NotificationTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: const Color(0xFFFFF1E6),
+              color: AppColors.primaryTint,
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: Colors.orange, size: 20),
+            child: Icon(icon, color: AppColors.primary, size: 20),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                Text(title, style: AppTextStyles.labelBase()),
                 const SizedBox(height: 2),
-                Text(subtitle, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
+                Text(subtitle, style: AppTextStyles.caption()),
               ],
             ),
           ),
-          Switch(value: value, activeThumbColor: Colors.orange, onChanged: onChanged),
+          Switch(value: value, activeThumbColor: AppColors.primary, onChanged: onChanged),
         ],
       ),
     );

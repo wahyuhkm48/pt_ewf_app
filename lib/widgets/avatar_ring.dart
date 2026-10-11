@@ -1,6 +1,7 @@
 // widgets/avatar_ring.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class AvatarRing extends StatelessWidget {
   final double size;
@@ -59,7 +60,7 @@ class AvatarRing extends StatelessWidget {
       alignment: Alignment.center,
       child: Text(
         _initial,
-        style: TextStyle(fontSize: size * 0.34, fontWeight: FontWeight.bold, color: AppColors.primaryDark),
+        style: AppTextStyles.h3(color: AppColors.primaryDark).copyWith(fontSize: size * 0.34),
       ),
     );
   }

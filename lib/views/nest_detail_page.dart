@@ -1,6 +1,7 @@
 // views/nest_detail_page.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../models/nest_model.dart';
 import '../widgets/action_badge.dart';
 import '../widgets/mini_stat.dart';
@@ -40,14 +41,13 @@ class NestDetailPage extends StatelessWidget {
                         padding: EdgeInsets.zero,
                       ),
                     ),
-                    const Text('Detail Nest',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    Text('Detail Nest', style: AppTextStyles.h3()),
                   ],
                 ),
               ),
               const SizedBox(height: 8),
               Text('${assetLabel(item.asset)} • ${_formatDate(item.tanggal)}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                  style: AppTextStyles.bodySm()),
               const SizedBox(height: 20),
 
               ActionBadge(action: item.action),

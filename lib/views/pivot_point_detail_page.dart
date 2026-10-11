@@ -1,6 +1,7 @@
 // views/pivot_point_detail_page.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../models/pivot_point_model.dart';
 import '../widgets/action_badge.dart';
 import '../widgets/mini_stat.dart';
@@ -41,14 +42,14 @@ class PivotPointDetailPage extends StatelessWidget {
                         padding: EdgeInsets.zero,
                       ),
                     ),
-                    const Text('Detail Pivot Point',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    Text('Detail Pivot Point',
+                        style: AppTextStyles.h3()),
                   ],
                 ),
               ),
               const SizedBox(height: 8),
               Text('${assetLabel(item.asset)} • ${_formatDate(item.tanggal)}',
-                  style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                  style: AppTextStyles.bodySm()),
               const SizedBox(height: 20),
 
               if (item.action != null) ...[

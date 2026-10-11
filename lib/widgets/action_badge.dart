@@ -1,6 +1,7 @@
 // widgets/action_badge.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class ActionBadge extends StatelessWidget {
   final String action; // 'buy' | 'sell' | 'netral'
@@ -28,7 +29,7 @@ class ActionBadge extends StatelessWidget {
           children: [
             Icon(icon, color: color, size: 12),
             const SizedBox(width: 4),
-            Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 10, letterSpacing: 0.5)),
+            Text(label, style: AppTextStyles.micro(color: color).copyWith(fontWeight: FontWeight.bold, letterSpacing: 0.5)),
           ],
         ),
       );
@@ -47,7 +48,7 @@ class ActionBadge extends StatelessWidget {
         children: [
           Icon(icon, color: color),
           const SizedBox(width: 8),
-          Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1)),
+          Text(label, style: AppTextStyles.labelLg(color: color).copyWith(letterSpacing: 1)),
         ],
       ),
     );

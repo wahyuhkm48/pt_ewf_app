@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/history_tiles.dart';
 import '../services/pivot_point_service.dart';
@@ -88,13 +89,9 @@ class _HistoryPageState extends State<HistoryPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               'My History',
-              style: TextStyle(
-                fontSize: 26,
-                fontWeight: FontWeight.bold,
-                color: AppColors.textPrimary,
-              ),
+              style: AppTextStyles.h1(),
             ),
             const SizedBox(height: 12),
             SingleChildScrollView(
@@ -238,11 +235,7 @@ class _TabChip extends StatelessWidget {
         ),
         child: Text(
           label,
-          style: TextStyle(
-            color: selected ? Colors.white : AppColors.textSecondary,
-            fontWeight: FontWeight.w600,
-            fontSize: 13,
-          ),
+          style: AppTextStyles.labelMd(color: selected ? Colors.white : AppColors.textSecondary),
         ),
       ),
     );

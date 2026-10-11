@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class HelpPage extends StatelessWidget {
   const HelpPage({super.key});
@@ -26,24 +27,16 @@ class HelpPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     'Ada yang bisa kami bantu?',
-                    style: TextStyle(
-                      color: Color(0xFF1E2A47),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: AppTextStyles.h2(),
                   ),
 
                   const SizedBox(height: 6),
 
                   Text(
                     'Temukan jawaban dan informasi seputar aplikasi.',
-                    style: TextStyle(
-                      color: Colors.grey.shade600,
-                      fontSize: 13,
-                      height: 1.4,
-                    ),
+                    style: AppTextStyles.bodySm().copyWith(height: 1.4),
                   ),
                 ],
               ),
@@ -102,7 +95,7 @@ class HelpPage extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.all(18),
                       decoration: BoxDecoration(
-                        color: const Color(0xFFDCEBFF),
+                        color: AppColors.secondaryTint,
                         borderRadius: BorderRadius.circular(18),
                       ),
                       child: Row(
@@ -111,36 +104,29 @@ class HelpPage extends StatelessWidget {
                             width: 44,
                             height: 44,
                             decoration: BoxDecoration(
-                              color: const Color(0xFFFFE5C2),
+                              color: AppColors.primarySoft,
                               borderRadius: BorderRadius.circular(12),
                             ),
                             child: const Icon(
                               Icons.support_agent_rounded,
-                              color: Color(0xFFFF8A00),
+                              color: AppColors.primary,
                             ),
                           ),
 
                           const SizedBox(width: 14),
 
-                          const Expanded(
+                          Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
                                   'Masih butuh bantuan?',
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color(0xFF1E2A47),
-                                  ),
+                                  style: AppTextStyles.labelLg(),
                                 ),
                                 SizedBox(height: 4),
                                 Text(
                                   'Hubungi tim support kami untuk bantuan lebih lanjut.',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.grey,
-                                  ),
+                                  style: AppTextStyles.caption(),
                                 ),
                               ],
                             ),
@@ -149,7 +135,7 @@ class HelpPage extends StatelessWidget {
                           const Icon(
                             Icons.arrow_forward_ios_rounded,
                             size: 16,
-                            color: Color(0xFF138EEC),
+                            color: AppColors.secondary,
                           ),
                         ],
                       ),
@@ -190,7 +176,7 @@ class _HelpTileState extends State<_HelpTile> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        color: const Color(0xFFDCEBFF),
+        color: AppColors.secondaryTint,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Column(
@@ -203,16 +189,12 @@ class _HelpTileState extends State<_HelpTile> {
               padding: const EdgeInsets.symmetric(vertical: 12),
               child: Row(
                 children: [
-                  Icon(widget.icon, color: const Color(0xFFFF8A00), size: 22),
+                  Icon(widget.icon, color: AppColors.primary, size: 22),
                   const SizedBox(width: 14),
                   Expanded(
                     child: Text(
                       widget.title,
-                      style: const TextStyle(
-                        color: Color(0xFF1E2A47),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
+                      style: AppTextStyles.labelBase(),
                     ),
                   ),
                   AnimatedRotation(
@@ -220,7 +202,7 @@ class _HelpTileState extends State<_HelpTile> {
                     duration: const Duration(milliseconds: 200),
                     child: const Icon(
                       Icons.keyboard_arrow_down_rounded,
-                      color: Colors.grey,
+                      color: AppColors.textSecondary,
                     ),
                   ),
                 ],
@@ -233,11 +215,7 @@ class _HelpTileState extends State<_HelpTile> {
               padding: const EdgeInsets.only(bottom: 14, right: 4),
               child: Text(
                 widget.answer,
-                style: TextStyle(
-                  color: Colors.grey.shade700,
-                  fontSize: 13,
-                  height: 1.5,
-                ),
+                style: AppTextStyles.bodySm().copyWith(height: 1.5),
               ),
             ),
             crossFadeState: _expanded ? CrossFadeState.showSecond : CrossFadeState.showFirst,

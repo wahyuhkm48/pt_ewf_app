@@ -1,5 +1,7 @@
 // widgets/news_fallback_cover.dart
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class NewsFallbackCover extends StatelessWidget {
   final String sourceName;
@@ -16,13 +18,13 @@ class NewsFallbackCover extends StatelessWidget {
   Color _brandColor(String source) {
     switch (source.toLowerCase()) {
       case 'bloomberg':
-        return const Color(0xFF1A1A1A);
+        return AppColors.brandBloomberg;
       case 'cnbc':
-        return const Color(0xFF0A1E42);
+        return AppColors.brandCnbc;
       case 'reuters':
-        return const Color(0xFFFF6600);
+        return AppColors.brandReuters;
       default:
-        return const Color(0xFF37474F);
+        return AppColors.brandDefault;
     }
   }
 
@@ -47,7 +49,7 @@ class NewsFallbackCover extends StatelessWidget {
             Icon(Icons.public, color: Colors.white54, size: logoSize * 0.7),
           const SizedBox(height: 8),
           Text(sourceName,
-              style: const TextStyle(color: Colors.white70, fontWeight: FontWeight.w600, fontSize: 13, letterSpacing: 0.5)),
+              style: AppTextStyles.labelMd(color: Colors.white70).copyWith(letterSpacing: 0.5)),
         ],
       ),
     );

@@ -63,46 +63,41 @@ class AboutPage extends StatelessWidget {
                     // Nama
                     Text(
                       'EQUITYWORLD',
-                      style: AppTextStyles.label(
-                        size: 22,
-                        weight: FontWeight.w800,
-                        color: AppColors.primary,
-                      ).copyWith(letterSpacing: 1.2),
+                      style: AppTextStyles.h2(color: AppColors.primary)
+                          .copyWith(fontWeight: FontWeight.w800, letterSpacing: 1.2),
                     ),
                     const SizedBox(height: 4),
-                    const Text(
+                    Text(
                       'Trade with Trust',
-                      style: TextStyle(fontSize: 13, color: AppColors.textSecondary),
+                      style: AppTextStyles.bodySm(),
                     ),
                     const SizedBox(height: 28),
 
                     // Tentang aplikasi
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Tentang Aplikasi',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                        style: AppTextStyles.labelLg(),
                       ),
                     ),
                     const SizedBox(height: 8),
-                    const Text(
+                    Text(
                       'EQUITYWORLD adalah aplikasi pendamping perdagangan berjangka komoditi. '
                       'Kami berizin resmi BAPPEBTI sejak 2005 dan berkomitmen menjadi partner '
                       'terpercaya Anda. Aplikasi ini membantu Anda memantau pasar, menghitung '
                       'potensi transaksi, dan memahami sinyal analisis dengan cara yang sederhana.',
                       textAlign: TextAlign.justify,
-                      style: TextStyle(fontSize: 13, height: 1.6, color: AppColors.textSecondary),
+                      style: AppTextStyles.bodySm().copyWith(height: 1.6),
                     ),
                     const SizedBox(height: 24),
 
                     // Fitur
-                    const Align(
+                    Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Fitur Utama',
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+                        style: AppTextStyles.labelLg(),
                       ),
                     ),
                     const SizedBox(height: 12),
@@ -133,7 +128,7 @@ class AboutPage extends StatelessWidget {
                     Text(
                       '© $year EQUITYWORLD.\nAll rights reserved.',
                       textAlign: TextAlign.center,
-                      style: const TextStyle(fontSize: 12, height: 1.5, color: AppColors.textSecondary),
+                      style: AppTextStyles.caption().copyWith(height: 1.5),
                     ),
                   ],
                 ),
@@ -179,12 +174,10 @@ class _FeatureRow extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: const TextStyle(
-                        fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    style: AppTextStyles.labelBase()),
                 const SizedBox(height: 2),
                 Text(desc,
-                    style: const TextStyle(
-                        fontSize: 12, height: 1.4, color: AppColors.textSecondary)),
+                    style: AppTextStyles.caption().copyWith(height: 1.4)),
               ],
             ),
           ),

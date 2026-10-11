@@ -2,6 +2,7 @@
 // Tile ini DIPINDAH dari history_page.dart (isinya sama, hanya nama jadi public).
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../models/pivot_point_model.dart';
 import '../models/nest_model.dart';
 import '../models/emas_fisik_model.dart';
@@ -41,10 +42,10 @@ class PivotHistoryTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Pivot Point: ${item.pivotPoint.toStringAsFixed(2)}',
-                      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+                      style: AppTextStyles.labelBase()),
                   const SizedBox(height: 2),
                   Text('${assetLabel(item.asset)} • $tanggalStr',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      style: AppTextStyles.caption()),
                 ],
               ),
             ),
@@ -92,11 +93,11 @@ class NestHistoryTile extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Nest',
-                      style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+                  Text('Nest',
+                      style: AppTextStyles.labelBase()),
                   const SizedBox(height: 2),
                   Text('${assetLabel(item.asset)} • $tanggalStr',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      style: AppTextStyles.caption()),
                 ],
               ),
             ),
@@ -151,13 +152,10 @@ class EmasHistoryTile extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text('Profit: ${item.profit.toStringAsFixed(2)}',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600, fontSize: 14,
-                        color: untung ? AppColors.success : AppColors.danger,
-                      )),
+                      style: AppTextStyles.labelBase(color: untung ? AppColors.success : AppColors.danger)),
                   const SizedBox(height: 2),
                   Text('${item.beratGram.toStringAsFixed(2)} gram • $tanggalStr',
-                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                      style: AppTextStyles.caption()),
                 ],
               ),
             ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/avatar_ring.dart';
 
@@ -118,7 +119,7 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
                     onTap: _uploadingFoto ? null : () => _pilihFoto(auth),
                     child: Container(
                       padding: const EdgeInsets.all(6),
-                      decoration: const BoxDecoration(color: Colors.black87, shape: BoxShape.circle),
+                      decoration: const BoxDecoration(color: AppColors.textPrimary, shape: BoxShape.circle),
                       child: _uploadingFoto
                           ? const SizedBox(
                               width: 18, height: 18,
@@ -182,9 +183,9 @@ class _InfoField extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(label, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                    Text(label, style: AppTextStyles.caption()),
                     const SizedBox(height: 4),
-                    Text(value, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w600, color: AppColors.textPrimary)),
+                    Text(value, style: AppTextStyles.labelLg()),
                   ],
                 ),
               ),

@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import 'login_page.dart';
 import 'account_information_page.dart';
@@ -64,12 +65,12 @@ class SettingsPage extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               employee?.namaLengkap ?? 'Pengguna',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+              style: AppTextStyles.h3(),
             ),
             const SizedBox(height: 2),
             Text(
               employee?.role ?? '-',
-              style: const TextStyle(fontSize: 13, color: AppColors.textSecondary),
+              style: AppTextStyles.bodySm(),
             ),
             const SizedBox(height: 24),
             Padding(
@@ -194,7 +195,7 @@ class _SettingTile extends StatelessWidget {
             children: [
               Icon(icon, color: fgColor, size: 20),
               const SizedBox(width: 14),
-              Text(label, style: TextStyle(color: fgColor, fontWeight: FontWeight.w600, fontSize: 15)),
+              Text(label, style: AppTextStyles.labelLg(color: fgColor)),
             ],
           ),
         ),

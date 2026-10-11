@@ -97,11 +97,8 @@ class WelcomePage extends StatelessWidget {
                   const SizedBox(height: 14),
                   Text(
                     'EQUITYWORLD',
-                    style: AppTextStyles.label(
-                      size: 20,
-                      weight: FontWeight.w800,
-                      color: AppColors.primary,
-                    ).copyWith(letterSpacing: 1.2),
+                    style: AppTextStyles.h3(color: AppColors.textPrimary)
+                        .copyWith(fontWeight: FontWeight.w800, letterSpacing: 1.2),
                   ),
                 ],
               ),
@@ -126,27 +123,21 @@ class WelcomePage extends StatelessWidget {
                       children: [
                         Text(
                           'Welcome',
-                          style: AppTextStyles.headline(
-                            size: 28,
-                            weight: FontWeight.w800,
-                            color: AppColors.textPrimary,
-                          ),
+                          style: AppTextStyles.h1(color: AppColors.textPrimary)
+                              .copyWith(fontWeight: FontWeight.w800),
                         ),
                         const SizedBox(height: 8),
                         Text(
                           'Login or create an account to continue.',
                           textAlign: TextAlign.center,
-                          style: AppTextStyles.body(
-                            size: 14,
-                            color: AppColors.textSecondary,
-                          ),
+                          style: AppTextStyles.bodyMd(color: AppColors.textSecondary),
                         ),
                         const Spacer(),
 
                         // Tombol Login — pill gelap
                         _WelcomeButton(
                           label: 'Login',
-                          gradientColors: const [Color(0xFF1B1F2A), Color(0xFF0D0F14)],
+                          gradientColors: const [AppColors.darkButtonTop, AppColors.darkButtonBottom],
                           textColor: Colors.white,
                           onTap: () => Navigator.of(context).pushReplacement(
                             MaterialPageRoute(builder: (_) => const LoginPage()),
@@ -218,11 +209,8 @@ class _WelcomeButton extends StatelessWidget {
           ),
           child: Text(
             label,
-            style: AppTextStyles.label(
-              size: 16,
-              weight: FontWeight.w700,
-              color: textColor,
-            ),
+            style: AppTextStyles.labelLg(color: textColor)
+                .copyWith(fontWeight: FontWeight.w700),
           ),
         ),
       ),

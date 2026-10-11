@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'core/api_client.dart';
 import 'services/auth_service.dart';
@@ -7,6 +8,7 @@ import 'services/emas_fisik_service.dart';
 import 'services/histori_service.dart';
 import 'services/news_service.dart';
 import 'services/market_data_service.dart';
+import 'theme/app_colors.dart';
 import 'viewmodels/auth_viewmodel.dart';
 import 'viewmodels/pivot_point_viewmodel.dart';
 import 'viewmodels/emas_fisik_viewmodel.dart';
@@ -45,6 +47,20 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'EquityWorld',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        useMaterial3: true,
+        scaffoldBackgroundColor: AppColors.background,
+        dividerColor: AppColors.divider,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          primary: AppColors.primary,
+          secondary: AppColors.secondary,
+          error: AppColors.danger,
+          surface: AppColors.background,
+        ),
+        textTheme: GoogleFonts.interTextTheme(),
+        progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.primary),
+      ),
       home: const SplashPage(),
     );
   }

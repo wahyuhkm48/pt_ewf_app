@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../utils/form_errors.dart';
 import '../widgets/password_field.dart';
@@ -93,30 +94,17 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: [
                   const SizedBox(height: 190),
-                  const Text(
-                    'Login',
-                    style: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
+                  Text('Login', style: AppTextStyles.h1()),
                   const SizedBox(height: 6),
-                  const Text(
-                    "Welcome back, please login to continue",
-                    style: TextStyle(
-                      fontSize: 13,
-                      color: AppColors.textSecondary,
-                    ),
-                  ),
+                  Text("Welcome back, please login to continue", style: AppTextStyles.bodySm()),
                   const SizedBox(height: 36),
 
                   // Email
                   TextField(
                     controller: emailCtrl,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       labelText: 'Email',
-                      labelStyle: TextStyle(color: AppColors.textSecondary),
+                      labelStyle: AppTextStyles.bodyMd(),
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(color: AppColors.divider),
                       ),
@@ -136,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                       width: double.infinity,
                       child: Text(
                         _error!,
-                        style: const TextStyle(color: AppColors.danger),
+                        style: AppTextStyles.bodyMd(color: AppColors.danger),
                       ),
                     ),
                   ],
@@ -183,13 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                                 setState(() => _error = vm.errorMessage);
                               }
                             },
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
+                          child: Text('Login', style: AppTextStyles.labelLg(color: Colors.white)),
                           ),
                   ),
                   const SizedBox(height: 16),
@@ -200,19 +182,13 @@ class _LoginPageState extends State<LoginPage> {
                       MaterialPageRoute(builder: (_) => const RegisterPage()),
                     ),
                     child: RichText(
-                      text: const TextSpan(
+                      text: TextSpan(
                         text: "Don't have an account? ",
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 13,
-                        ),
+                        style: AppTextStyles.bodySm(),
                         children: [
                           TextSpan(
                             text: 'Sign Up',
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: AppTextStyles.labelMd(),
                           ),
                         ],
                       ),

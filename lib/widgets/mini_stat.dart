@@ -1,6 +1,6 @@
 // widgets/mini_stat.dart
 import 'package:flutter/material.dart';
-import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class MiniStat extends StatelessWidget {
   final String label;
@@ -13,9 +13,9 @@ class MiniStat extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(fontSize: 11, color: AppColors.textSecondary)),
+          Text(label, style: AppTextStyles.micro()),
           const SizedBox(height: 2),
-          Text(value, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+          Text(value, style: AppTextStyles.labelMd()),
         ],
       ),
     );

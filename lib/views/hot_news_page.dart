@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
@@ -45,7 +46,7 @@ class _HotNewsPageState extends State<HotNewsPage> {
                 alignment: Alignment.centerLeft,
               ),
               const SizedBox(height: 4),
-              const Text('Hot News', style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              Text('Hot News', style: AppTextStyles.h1()),
               const SizedBox(height: 16),
               Expanded(
                 child: Builder(builder: (context) {
@@ -103,7 +104,7 @@ class _HotNewsCard extends StatelessWidget {
               ),
               const DecoratedBox(
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, Colors.black87], stops: [0.4, 1.0]),
+                  gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.transparent, AppColors.overlayDark], stops: [0.4, 1.0]),
                 ),
               ),
               Positioned(
@@ -113,10 +114,10 @@ class _HotNewsCard extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(article.title, maxLines: 2, overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18)),
+                        style: AppTextStyles.h3(color: Colors.white)),
                     if (article.description != null) ...[
                       const SizedBox(height: 6),
-                      Text(article.description!, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(color: Colors.white70, fontSize: 13)),
+                      Text(article.description!, maxLines: 2, overflow: TextOverflow.ellipsis, style: AppTextStyles.bodySm(color: Colors.white70)),
                     ],
                   ],
                 ),

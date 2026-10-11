@@ -1,6 +1,7 @@
 // widgets/education_sections.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 // ============================================================
 // Building blocks
@@ -39,8 +40,7 @@ class ExplainCard extends StatelessWidget {
           leading: Icon(icon, color: AppColors.primary),
           title: Text(
             title,
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.textPrimary),
+            style: AppTextStyles.labelBase(),
           ),
           children: children,
         ),
@@ -57,7 +57,7 @@ class _P extends StatelessWidget {
   Widget build(BuildContext context) => Padding(
         padding: const EdgeInsets.only(bottom: 10),
         child: Text(text,
-            style: const TextStyle(fontSize: 13, height: 1.5, color: AppColors.textSecondary)),
+            style: AppTextStyles.bodySm().copyWith(height: 1.5)),
       );
 }
 
@@ -75,12 +75,11 @@ class _Term extends StatelessWidget {
             SizedBox(
               width: 74,
               child: Text(term,
-                  style: const TextStyle(
-                      fontSize: 13, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  style: AppTextStyles.labelMd()),
             ),
             Expanded(
               child: Text(desc,
-                  style: const TextStyle(fontSize: 13, height: 1.4, color: AppColors.textSecondary)),
+                  style: AppTextStyles.bodySm().copyWith(height: 1.4)),
             ),
           ],
         ),
@@ -97,11 +96,11 @@ class _Disclaimer extends StatelessWidget {
           color: AppColors.primary.withValues(alpha: 0.08),
           borderRadius: BorderRadius.circular(12),
         ),
-        child: const Text(
+        child: Text(
           'Hasil ini adalah indikator berbasis rumus untuk membantu analisis, bukan jaminan '
           'harga akan bergerak sesuai sinyal. Trading mengandung risiko, selalu sesuaikan '
           'dengan profil risiko dan modal Anda.',
-          style: TextStyle(fontSize: 12, height: 1.45, color: AppColors.textSecondary),
+          style: AppTextStyles.caption().copyWith(height: 1.45),
         ),
       );
 }
@@ -135,13 +134,13 @@ class _WhyCard extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(headline,
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: color)),
+                    style: AppTextStyles.labelBase(color: color)),
               ),
             ],
           ),
           const SizedBox(height: 8),
           Text(detail,
-              style: const TextStyle(fontSize: 13, height: 1.5, color: AppColors.textPrimary)),
+              style: AppTextStyles.bodySm(color: AppColors.textPrimary).copyWith(height: 1.5)),
         ],
       ),
     );

@@ -1,6 +1,7 @@
 // widgets/password_field.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 /// TextField password dengan ikon mata untuk menampilkan / menyembunyikan teks.
 /// Status tampil/sembunyi disimpan di dalam widget ini, jadi tiap kolom
@@ -29,7 +30,7 @@ class _PasswordFieldState extends State<PasswordField> {
       obscureText: _obscure,
       decoration: InputDecoration(
         labelText: widget.label,
-        labelStyle: const TextStyle(color: AppColors.textSecondary),
+        labelStyle: AppTextStyles.bodyMd(),
         enabledBorder: const UnderlineInputBorder(
           borderSide: BorderSide(color: AppColors.divider),
         ),

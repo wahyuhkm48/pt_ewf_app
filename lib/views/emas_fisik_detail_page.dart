@@ -1,6 +1,7 @@
 // views/emas_fisik_detail_page.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../models/emas_fisik_model.dart';
 import '../widgets/mini_stat.dart';
 
@@ -40,13 +41,13 @@ class EmasFisikDetailPage extends StatelessWidget {
                         padding: EdgeInsets.zero,
                       ),
                     ),
-                    const Text('Detail Emas Fisik',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                    Text('Detail Emas Fisik',
+                        style: AppTextStyles.h3()),
                   ],
                 ),
               ),
               const SizedBox(height: 8),
-              Text(_formatDate(item.tanggal), style: const TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+              Text(_formatDate(item.tanggal), style: AppTextStyles.bodySm()),
               const SizedBox(height: 20),
 
               Container(
@@ -60,14 +61,10 @@ class EmasFisikDetailPage extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(untung ? 'UNTUNG' : 'RUGI',
-                        style: TextStyle(
-                            color: untung ? AppColors.success : AppColors.danger,
-                            fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1)),
+                        style: AppTextStyles.labelBase(color: untung ? AppColors.success : AppColors.danger).copyWith(letterSpacing: 1)),
                     const SizedBox(height: 4),
                     Text(item.profit.toStringAsFixed(2),
-                        style: TextStyle(
-                            color: untung ? AppColors.success : AppColors.danger,
-                            fontWeight: FontWeight.bold, fontSize: 22)),
+                        style: AppTextStyles.h2(color: untung ? AppColors.success : AppColors.danger)),
                   ],
                 ),
               ),

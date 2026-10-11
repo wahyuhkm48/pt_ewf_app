@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/tradingview_chart.dart';
 import '../viewmodels/histori_viewmodel.dart';
@@ -80,7 +81,7 @@ class _ChartPageState extends State<ChartPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('Chart', style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+              Text('Chart', style: AppTextStyles.h1()),
               const SizedBox(height: 16),
               _buildTabs(),
               const SizedBox(height: 16),
@@ -100,7 +101,7 @@ class _ChartPageState extends State<ChartPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text('Data Historis', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppColors.textPrimary)),
+                  Text('Data Historis', style: AppTextStyles.h3()),
                   Material(
                     color: AppColors.successBg,
                     borderRadius: BorderRadius.circular(10),
@@ -122,7 +123,7 @@ class _ChartPageState extends State<ChartPage> {
                             const SizedBox(width: 6),
                             Text(
                               _isExporting ? 'Menyiapkan...' : 'Excel',
-                              style: const TextStyle(color: AppColors.success, fontWeight: FontWeight.w600, fontSize: 13),
+                              style: AppTextStyles.labelMd(color: AppColors.success),
                             ),
                           ],
                         ),
@@ -142,13 +143,13 @@ class _ChartPageState extends State<ChartPage> {
                         color: AppColors.surface,
                         borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
                       ),
-                      child: const Row(
+                      child: Row(
                         children: [
-                          Expanded(flex: 2, child: Text('TANGGAL', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                          Expanded(child: Text('OPEN', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                          Expanded(child: Text('HIGH', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                          Expanded(child: Text('LOW', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
-                          Expanded(child: Text('CLOSE', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))),
+                          Expanded(flex: 2, child: Text('TANGGAL', style: AppTextStyles.labelSm(),)),
+                          Expanded(child: Text('OPEN', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
+                          Expanded(child: Text('HIGH', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
+                          Expanded(child: Text('LOW', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
+                          Expanded(child: Text('CLOSE', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
                         ],
                       ),
                     ),
@@ -205,7 +206,7 @@ class _ChartPageState extends State<ChartPage> {
                 decoration: BoxDecoration(color: selected ? AppColors.primary : Colors.transparent, borderRadius: BorderRadius.circular(26)),
                 alignment: Alignment.center,
                 child: Text(_tabs[index],
-                    style: TextStyle(color: selected ? Colors.white : AppColors.textSecondary, fontWeight: FontWeight.w600, fontSize: 13)),
+                    style: AppTextStyles.labelMd(color: selected ? Colors.white : AppColors.textSecondary)),
               ),
             ),
           );
@@ -231,14 +232,14 @@ class _HistoryRow extends StatelessWidget {
       decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.divider, width: 0.5))),
       child: Row(
         children: [
-          Expanded(flex: 2, child: Text(_formatDate(data.tanggal), style: const TextStyle(fontSize: 12, color: AppColors.textPrimary))),
-          Expanded(child: Text(data.open.toStringAsFixed(2), textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textPrimary))),
+          Expanded(flex: 2, child: Text(_formatDate(data.tanggal), style: AppTextStyles.caption(color: AppColors.textPrimary))),
+          Expanded(child: Text(data.open.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
           SizedBox(width: 5), 
-          Expanded(child: Text(data.high.toStringAsFixed(2), textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textPrimary))),
+          Expanded(child: Text(data.high.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
           SizedBox(width: 5), 
-          Expanded(child: Text(data.low.toStringAsFixed(2), textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textPrimary))),
+          Expanded(child: Text(data.low.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
           SizedBox(width: 5), 
-          Expanded(child: Text(data.close.toStringAsFixed(2), textAlign: TextAlign.center, style: const TextStyle(fontSize: 12, color: AppColors.textPrimary))),
+          Expanded(child: Text(data.close.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
         ],
       ),
     );

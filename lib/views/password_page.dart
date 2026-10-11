@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../utils/form_errors.dart';
 
@@ -109,7 +110,7 @@ class _PasswordPageState extends State<PasswordPage> {
             ),
             if (_errorText != null) ...[
               const SizedBox(height: 12),
-              Text(_errorText!, style: const TextStyle(color: AppColors.danger)),
+              Text(_errorText!, style: AppTextStyles.bodyMd(color: AppColors.danger)),
             ],
             const SizedBox(height: 32),
             SizedBox(
@@ -125,9 +126,9 @@ class _PasswordPageState extends State<PasswordPage> {
                     ? const SizedBox(
                         width: 20, height: 20,
                         child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                    : const Text(
+                    : Text(
                         'Change Password',
-                        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 16),
+                        style: AppTextStyles.labelLg(color: Colors.white),
                       ),
               ),
             ),
@@ -160,7 +161,7 @@ class _PasswordField extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14, color: AppColors.textPrimary)),
+        Text(label, style: AppTextStyles.labelBase()),
         const SizedBox(height: 8),
         TextField(
           controller: controller,
@@ -177,7 +178,7 @@ class _PasswordField extends StatelessWidget {
         ),
         if (helperText != null) ...[
           const SizedBox(height: 4),
-          Text(helperText!, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+          Text(helperText!, style: AppTextStyles.caption()),
         ],
       ],
     );

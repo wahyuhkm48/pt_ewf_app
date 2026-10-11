@@ -55,11 +55,8 @@ class OnboardingPage extends StatelessWidget {
                       const SizedBox(width: 8),
                       Text(
                         'EQUITYWORLD',
-                        style: AppTextStyles.label(
-                          size: 16,
-                          weight: FontWeight.w800,
-                          color: AppColors.textPrimary,
-                        ),
+                        style: AppTextStyles.labelLg(color: AppColors.textPrimary)
+                            .copyWith(fontWeight: FontWeight.w800),
                       ),
                     ],
                   ),
@@ -69,11 +66,7 @@ class OnboardingPage extends StatelessWidget {
                   // Headline
                   Text(
                     'TRADE\nWITH TRUST',
-                    style: AppTextStyles.headline(
-                      size: 38,
-                      weight: FontWeight.w800,
-                      color: AppColors.primary,
-                    ).copyWith(height: 1.05),
+                    style: AppTextStyles.display(color: AppColors.primary).copyWith(height: 1.05),
                   ),
 
                   const SizedBox(height: 16),
@@ -82,7 +75,7 @@ class OnboardingPage extends StatelessWidget {
                   Text(
                     'Berizin resmi BAPPEBTI sejak 2005. Partner '
                     'terpercaya Anda dalam perdagangan berjangka komoditi.',
-                    style: AppTextStyles.body(size: 14, color: Colors.white),
+                    style: AppTextStyles.bodyMd(color: Colors.white),
                   ),
 
                   const SizedBox(height: 24),
@@ -104,11 +97,8 @@ class OnboardingPage extends StatelessWidget {
                             Expanded(
                               child: Text(
                                 'Get Started',
-                                style: AppTextStyles.label(
-                                  size: 16,
-                                  weight: FontWeight.w700,
-                                  color: AppColors.textPrimary,
-                                ),
+                                style: AppTextStyles.labelLg(color: AppColors.textPrimary)
+                                    .copyWith(fontWeight: FontWeight.w700),
                               ),
                             ),
                             Container(

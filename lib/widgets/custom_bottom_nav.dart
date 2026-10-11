@@ -1,6 +1,7 @@
 // widgets/custom_bottom_nav.dart
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 class SpeedDialAction {
   final String iconAsset;
@@ -201,11 +202,7 @@ class _NavItem extends StatelessWidget {
             const SizedBox(height: 3),
             Text(
               label,
-              style: TextStyle(
-                fontSize: 11,
-                color: color,
-                fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
-              ),
+              style: AppTextStyles.micro(color: color).copyWith(fontWeight: selected ? FontWeight.w600 : FontWeight.w400),
             ),
           ],
         ),

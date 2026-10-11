@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_text_styles.dart';
 
 /// Tampilan kosong (belum ada data) yang dipakai di Home, History, dan Chart.
 class EmptyState extends StatelessWidget {
@@ -38,18 +39,14 @@ class EmptyState extends StatelessWidget {
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: AppColors.textPrimary,
-            ),
+            style: AppTextStyles.labelBase(),
           ),
           if (subtitle != null) ...[
             const SizedBox(height: 4),
             Text(
               subtitle!,
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 12.5, color: AppColors.textSecondary),
+              style: AppTextStyles.caption(),
             ),
           ],
         ],

@@ -4,8 +4,17 @@ import 'package:flutter/material.dart';
 class AppColors {
   AppColors._();
 
+  // Tint sangat lembut (latar ikon/kartu)
+  static const Color primaryTint = Color(0xFFFFF1E6);
+  static const Color secondaryTint = Color(0xFFDCEBFF);
+
+  static const Color darkButtonTop = Color(0xFF1B1F2A);
+  static const Color darkButtonBottom = Color(0xFF0D0F14);
+
   // Primary — oranye
   static const Color primary = Color(0xFFEC7013);
+  static const Color primaryLight = Color(0xFFFF8D46);
+  static const Color primaryDeep = Color(0xFFC25800);
   static const Color primaryDark = Color(0xFFB85510);
   static const Color primarySoft = Color(0xFFFBD9BE); // tint lembut untuk banner
 
@@ -29,4 +38,17 @@ class AppColors {
   // Danger (untuk tombol Logout dsb, di luar palette resmi tapi umum dipakai)
   static const Color danger = Color(0xFFE53935);
   static const Color dangerBg = Color(0xFFFBD9D9);
+
+  // Ilustrasi (globe di halaman Bahasa)
+  static const Color globeLight = Color(0xFF64C7F0);
+  static const Color globeDark = Color(0xFF4389D8);
+
+  // Brand sumber berita (kartu berita cadangan)
+  static const Color brandBloomberg = Color(0xFF1A1A1A);
+  static const Color brandCnbc = Color(0xFF0A1E42);
+  static const Color brandReuters = Color(0xFFFF6600);
+  static const Color brandDefault = Color(0xFF37474F);
+
+  // Overlay gelap di atas foto berita (sama dengan Colors.black87)
+  static const Color overlayDark = Color(0xDD000000);
 }
