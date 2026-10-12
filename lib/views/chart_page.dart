@@ -138,18 +138,18 @@ class _ChartPageState extends State<ChartPage> {
                 child: Column(
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
                       decoration: const BoxDecoration(
                         color: AppColors.surface,
                         borderRadius: BorderRadius.only(topLeft: Radius.circular(14), topRight: Radius.circular(14)),
                       ),
                       child: Row(
                         children: [
-                          Expanded(flex: 2, child: Text('TANGGAL', style: AppTextStyles.labelSm(),)),
-                          Expanded(child: Text('OPEN', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
-                          Expanded(child: Text('HIGH', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
-                          Expanded(child: Text('LOW', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
-                          Expanded(child: Text('CLOSE', textAlign: TextAlign.center, style: AppTextStyles.labelSm(),)),
+                          _dateCell('TANGGAL', AppTextStyles.labelSm()),
+                          _ohlcCell('OPEN', AppTextStyles.labelSm()),
+                          _ohlcCell('HIGH', AppTextStyles.labelSm()),
+                          _ohlcCell('LOW', AppTextStyles.labelSm()),
+                          _ohlcCell('CLOSE', AppTextStyles.labelSm()),
                         ],
                       ),
                     ),
@@ -182,7 +182,7 @@ class _ChartPageState extends State<ChartPage> {
                   ],
                 ),
               ),
-              const SizedBox(height: 60),
+              const SizedBox(height: 80),
             ],
           ),
         ),
@@ -216,6 +216,29 @@ class _ChartPageState extends State<ChartPage> {
   }
 }
 
+// Lebar kolom tanggal. Kecilkan angka ini kalau mau OHLC lebih dekat ke tanggal.
+const double _kDateColWidth = 78;
+
+Widget _dateCell(String text, TextStyle style) => SizedBox(
+      width: _kDateColWidth,
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: Text(text, maxLines: 1, style: style),
+      ),
+    );
+
+// Sel OHLC. Besarkan `horizontal` kalau mau jarak antar OHLC lebih lebar.
+Widget _ohlcCell(String text, TextStyle style) => Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(text, maxLines: 1, style: style),
+        ),
+      ),
+    );
+
 class _HistoryRow extends StatelessWidget {
   final HistoriDataModel data;
   const _HistoryRow({required this.data});
@@ -227,19 +250,18 @@ class _HistoryRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = AppTextStyles.caption(color: AppColors.textPrimary);
+
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 12),
       decoration: const BoxDecoration(border: Border(top: BorderSide(color: AppColors.divider, width: 0.5))),
       child: Row(
         children: [
-          Expanded(flex: 2, child: Text(_formatDate(data.tanggal), style: AppTextStyles.caption(color: AppColors.textPrimary))),
-          Expanded(child: Text(data.open.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
-          SizedBox(width: 5), 
-          Expanded(child: Text(data.high.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
-          SizedBox(width: 5), 
-          Expanded(child: Text(data.low.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
-          SizedBox(width: 5), 
-          Expanded(child: Text(data.close.toStringAsFixed(2), textAlign: TextAlign.center, style: AppTextStyles.caption(color: AppColors.textPrimary))),
+          _dateCell(_formatDate(data.tanggal), style),
+          _ohlcCell(data.open.toStringAsFixed(2), style),
+          _ohlcCell(data.high.toStringAsFixed(2), style),
+          _ohlcCell(data.low.toStringAsFixed(2), style),
+          _ohlcCell(data.close.toStringAsFixed(2), style),
         ],
       ),
     );
