@@ -5,6 +5,69 @@ import '../theme/app_text_styles.dart';
 class HelpPage extends StatelessWidget {
   const HelpPage({super.key});
 
+  static const _faqs = <(IconData, String, String)>[
+    (
+      Icons.calculate_outlined,
+      'Bagaimana cara menghitung Pivot Point atau Nest?',
+      'Ketuk tombol kalkulator oranye di menu bawah, lalu pilih Pivot Point. '
+          'Pada halaman Konsep Transaksi, pilih Mode Kalkulasi (Pivot Point atau Nest), '
+          'pilih Sumber Data, lalu ketuk Hitung.',
+    ),
+    (
+      Icons.analytics_outlined,
+      'Apa bedanya Pivot Point dan Nest?',
+      'Pivot Point menghitung titik pivot beserta level resistance (R1 sampai R4) dan '
+          'support (S1 sampai S4) dari High, Low, dan Close, lengkap dengan sinyal buy atau sell. '
+          'Nest membandingkan Close kemarin dengan Open hari ini untuk menghasilkan sinyal harian.',
+    ),
+    (
+      Icons.swap_horiz_rounded,
+      'Apa itu Ambil dari Pasar dan Input Manual?',
+      'Ambil dari Pasar memakai data harga pada tanggal dan produk (Gold, JPK, atau HKK) '
+          'yang kamu pilih, dan hasilnya tersimpan di History. Input Manual membuatmu mengisi '
+          'sendiri angkanya (High, Low, Close, atau Close kemarin dan Open hari ini untuk Nest). '
+          'Hasilnya hanya dihitung di aplikasi dan tidak tersimpan.',
+    ),
+    (
+      Icons.savings_outlined,
+      'Bagaimana cara menghitung Emas Fisik?',
+      'Ketuk tombol kalkulator, pilih Emas Fisik, lalu isi Harga Beli dan Harga Jual '
+          '(USD per toz), Kurs USD ke IDR (terisi otomatis dengan kurs terkini), dan Modal dalam rupiah. '
+          'Hasilnya berisi HHB, HHJ, selisih, berat emas dalam gram, dan keuntungan.',
+    ),
+    (
+      Icons.history_rounded,
+      'Bagaimana cara melihat riwayat perhitungan?',
+      'Buka menu History di bar bawah, lalu pilih tab Pivot Point, Nest, atau Emas Fisik. '
+          'Riwayat terbaru juga tampil di halaman Home, dan view all akan membawamu ke History.',
+    ),
+    (
+      Icons.show_chart_rounded,
+      'Bagaimana cara melihat grafik dan data historis?',
+      'Buka menu Chart, lalu pilih Gold, JPK (Nikkei), atau HKK (Hang Seng). Di bawah grafik '
+          'ada tabel Data Historis 90 hari terakhir berisi Open, High, Low, dan Close, '
+          'dengan tombol Excel untuk mengunduhnya.',
+    ),
+    (
+      Icons.newspaper_rounded,
+      'Di mana saya bisa membaca berita pasar?',
+      'Berita terbaru dari Bloomberg, CNBC, dan Reuters tampil di bagian Information pada '
+          'halaman Home. Ketuk view all untuk daftar lengkap, dan tarik layar ke bawah untuk memperbarui.',
+    ),
+    (
+      Icons.person_outline_rounded,
+      'Bagaimana cara mengubah informasi akun saya?',
+      'Buka Settings, lalu Account Information. Nama lengkap, nomor telepon, dan foto profil '
+          '(dari galeri) bisa diubah. Email dan tanggal bergabung tidak bisa diubah.',
+    ),
+    (
+      Icons.lock_outline_rounded,
+      'Bagaimana cara mengganti password?',
+      'Buka Settings, lalu Password. Isi password saat ini, password baru '
+          '(minimal 8 karakter dengan huruf dan angka), lalu konfirmasi password baru.',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,46 +112,14 @@ class HelpPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
-                    const _HelpTile(
-                      title: 'Bagaimana cara menggunakan kalkulator?',
-                      icon: Icons.calculate_outlined,
-                      answer: 'Buka menu Kalkulator dari halaman utama, lalu masukkan angka yang ingin dihitung sesuai fitur yang tersedia.',
+                    ..._faqs.map(
+                      (f) => Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _HelpTile(icon: f.$1, title: f.$2, answer: f.$3),
+                      ),
                     ),
 
-                    const SizedBox(height: 12),
-
-                    const _HelpTile(
-                      title: 'Bagaimana cara melihat riwayat perhitungan?',
-                      icon: Icons.history_rounded,
-                      answer: 'Riwayat perhitungan bisa dilihat di menu History yang ada di halaman utama aplikasi.',
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    const _HelpTile(
-                      title: 'Bagaimana cara menggunakan Pivot Points?',
-                      icon: Icons.analytics_outlined,
-                      answer: 'Pivot Points digunakan untuk menganalisis titik support dan resistance harga. Buka menu Chart untuk melihat fitur ini.',
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    const _HelpTile(
-                      title: 'Bagaimana cara mengubah informasi akun saya?',
-                      icon: Icons.person_outline_rounded,
-                      answer: 'Buka menu Settings, lalu pilih Account Information untuk mengubah nama, email, atau nomor telepon kamu.',
-                    ),
-
-                    const SizedBox(height: 12),
-
-                    const _HelpTile(
-                      title: 'Bagaimana cara mengubah bahasa aplikasi?',
-                      icon: Icons.language_rounded,
-                      answer: 'Buka menu Settings, lalu pilih Language dan pilih bahasa yang kamu inginkan.',
-                    ),
-
-                    const SizedBox(height: 28),
+                    const SizedBox(height: 16),
 
                     // CONTACT SUPPORT
                     Container(
@@ -123,7 +154,7 @@ class HelpPage extends StatelessWidget {
                                   'Masih butuh bantuan?',
                                   style: AppTextStyles.labelLg(),
                                 ),
-                                SizedBox(height: 4),
+                                const SizedBox(height: 4),
                                 Text(
                                   'Hubungi tim support kami untuk bantuan lebih lanjut.',
                                   style: AppTextStyles.caption(),

@@ -7,11 +7,12 @@ class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
 
   static const _features = <(IconData, String, String)>[
-    (Icons.savings_outlined, 'Emas Fisik', 'Hitung estimasi keuntungan jual-beli emas dari harga, kurs, dan modal.'),
-    (Icons.stacked_line_chart_rounded, 'Pivot Point', 'Lihat level support dan resistance beserta sinyal buy/sell.'),
-    (Icons.insights_rounded, 'Nest', 'Sinyal harian dari perbandingan close kemarin dan open hari ini.'),
-    (Icons.history_rounded, 'Histori & Market Data', 'Pantau data historis dan harga pasar Gold, Nikkei, dan Hang Seng.'),
-    (Icons.newspaper_rounded, 'Berita', 'Ikuti berita terbaru seputar pasar dan komoditi.'),
+    (Icons.stacked_line_chart_rounded, 'Pivot Point', 'Hitung titik pivot, level support dan resistance, serta sinyal buy atau sell dari data pasar atau input manual.'),
+    (Icons.insights_rounded, 'Nest', 'Sinyal harian dari perbandingan Close kemarin dan Open hari ini.'),
+    (Icons.savings_outlined, 'Emas Fisik', 'Hitung selisih harga, berat emas, dan estimasi keuntungan dari harga beli, harga jual, kurs, dan modal.'),
+    (Icons.show_chart_rounded, 'Chart & Data Historis', 'Grafik interaktif Gold, Nikkei (JPK), dan Hang Seng (HKK) dengan data historis Open, High, Low, Close yang bisa diunduh ke Excel.'),
+    (Icons.history_rounded, 'Riwayat', 'Simpan dan lihat kembali hasil perhitungan Pivot Point, Nest, dan Emas Fisik.'),
+    (Icons.newspaper_rounded, 'Berita', 'Berita pasar dan ekonomi terbaru dari Bloomberg, CNBC, dan Reuters.'),
   ];
 
   @override
@@ -85,8 +86,9 @@ class AboutPage extends StatelessWidget {
                     Text(
                       'EQUITYWORLD adalah aplikasi pendamping perdagangan berjangka komoditi. '
                       'Kami berizin resmi BAPPEBTI sejak 2005 dan berkomitmen menjadi partner '
-                      'terpercaya Anda. Aplikasi ini membantu Anda memantau pasar, menghitung '
-                      'potensi transaksi, dan memahami sinyal analisis dengan cara yang sederhana.',
+                      'terpercaya Anda. Aplikasi ini membantu Anda memantau grafik dan berita pasar, '
+                      'menghitung Pivot Point, Nest, dan emas fisik, serta menyimpan riwayat '
+                      'perhitungan dengan cara yang sederhana.',
                       textAlign: TextAlign.justify,
                       style: AppTextStyles.bodySm().copyWith(height: 1.6),
                     ),
@@ -173,11 +175,9 @@ class _FeatureRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title,
-                    style: AppTextStyles.labelBase()),
+                Text(title, style: AppTextStyles.labelBase()),
                 const SizedBox(height: 2),
-                Text(desc,
-                    style: AppTextStyles.caption().copyWith(height: 1.4)),
+                Text(desc, style: AppTextStyles.caption().copyWith(height: 1.4)),
               ],
             ),
           ),
