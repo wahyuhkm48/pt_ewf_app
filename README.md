@@ -1,8 +1,9 @@
-# Trust by Equityworld — Aplikasi Flutter
+# Trust by Equityworld — Aplikasi kalkulator, live chart, data historis, berita global.
 
 Aplikasi mobile pendamping perdagangan berjangka komoditi: kalkulator (Pivot Point, Nest, Emas Fisik), live chart, data historis, dan berita pasar global. Dibangun dengan Flutter dan terhubung ke backend Laravel (di-deploy di Vercel) dengan database Supabase.
 
-> Nama package Dart: `equityworld`. Nama yang tampil ke pengguna: **Trust by Equityworld**.
+> Nama package Dart: `trustbyequityworld`.
+> Nama aplikasi yang tampil ke pengguna: **Trust by Equityworld**.
 
 ---
 
@@ -141,7 +142,6 @@ assets/images/lowprofile-highprofit.png
 assets/images/rectangle 1351.png
 assets/images/icons/pivot_point.png
 assets/images/icons/emas_fisik.png
-assets/images/ewf_logo.png              # Logo lama (hapus jika sudah tidak dipakai)
 ```
 
 ### Mengganti icon aplikasi
@@ -212,4 +212,4 @@ Hasil build Android ada di `build/app/outputs/`. Untuk rilis ke Play Store / App
 
 - Tema warna dan tipografi terpusat di `lib/theme/` — ubah di sana, bukan per halaman.
 - Gunakan Hot Restart saat mengubah field di `State`, karena Hot Reload tidak menjalankan ulang `initState()`.
-- Jangan ubah `name: equityworld` di `pubspec.yaml` kecuali siap mengganti seluruh import `package:equityworld/...`.
+- Nama package pada `pubspec.yaml` adalah `trustbyequityworld`. Jika nama package diubah, sesuaikan seluruh import `package:trustbyequityworld/...`.
