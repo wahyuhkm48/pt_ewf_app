@@ -161,7 +161,7 @@ class _SplashPageState extends State<SplashPage> {
                     curve: Curves.easeOutBack,
                     scale: _showLogo ? 1 : 0.7,
                     child: Image.asset(
-                      'assets/images/ewf_logo.png',
+                      'assets/images/logo_trustByEwf.png',
                       width: 160,
                       errorBuilder: (context, error, stackTrace) =>
                           const Icon(Icons.public, size: 100, color: _mainOrange),

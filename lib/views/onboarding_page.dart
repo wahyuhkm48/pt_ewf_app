@@ -50,11 +50,11 @@ class OnboardingPage extends StatelessWidget {
                     children: [
                       ClipRRect(
                         borderRadius: BorderRadius.circular(8),
-                        child: Image.asset('assets/images/ewf_logo.png', height: 32),
+                        child: Image.asset('assets/images/logo_trustByEwf.png', height: 32),
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        'EQUITYWORLD',
+                        'Trust by Equityworld',
                         style: AppTextStyles.labelLg(color: AppColors.textPrimary)
                             .copyWith(fontWeight: FontWeight.w800),
                       ),

@@ -39,12 +39,12 @@ class AboutPage extends StatelessWidget {
                   children: [
                     // Logo
                     Container(
-                      width: 96,
-                      height: 96,
-                      padding: const EdgeInsets.all(16),
+                      width: 100,
+                      height: 100,
+                      padding: const EdgeInsets.all(6),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(20),
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withValues(alpha: 0.10),
@@ -54,7 +54,7 @@ class AboutPage extends StatelessWidget {
                         ],
                       ),
                       child: Image.asset(
-                        'assets/images/ewf_logo.png',
+                        'assets/images/logo_trustByEwf.png',
                         errorBuilder: (context, error, stackTrace) =>
                             const Icon(Icons.public, color: AppColors.primary, size: 48),
                       ),
@@ -63,7 +63,7 @@ class AboutPage extends StatelessWidget {
 
                     // Nama
                     Text(
-                      'EQUITYWORLD',
+                      'Trust by Equityworld',
                       style: AppTextStyles.h2(color: AppColors.primary)
                           .copyWith(fontWeight: FontWeight.w800, letterSpacing: 1.2),
                     ),
@@ -84,7 +84,7 @@ class AboutPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'EQUITYWORLD adalah aplikasi pendamping perdagangan berjangka komoditi. '
+                      'Trust by Equityworld adalah aplikasi pendamping perdagangan berjangka komoditi. '
                       'Kami berizin resmi BAPPEBTI sejak 2005 dan berkomitmen menjadi partner '
                       'terpercaya Anda. Aplikasi ini membantu Anda memantau grafik dan berita pasar, '
                       'menghitung Pivot Point, Nest, dan emas fisik, serta menyimpan riwayat '
@@ -128,7 +128,7 @@ class AboutPage extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      '© $year EQUITYWORLD.\nAll rights reserved.',
+                      '© $year Trust by Equityworld.\nAll rights reserved.',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.caption().copyWith(height: 1.5),
                     ),

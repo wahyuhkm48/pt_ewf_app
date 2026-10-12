@@ -74,8 +74,8 @@ class WelcomePage extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    width: 84,
-                    height: 84,
+                    width: 100,
+                    height: 100,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -87,17 +87,17 @@ class WelcomePage extends StatelessWidget {
                         ),
                       ],
                     ),
-                    padding: const EdgeInsets.all(14),
+                    padding: const EdgeInsets.all(6),
                     child: Image.asset(
-                      'assets/images/ewf_logo.png',
+                      'assets/images/logo_trustByEwf.png',
                       errorBuilder: (context, error, stackTrace) =>
                           const Icon(Icons.public, color: AppColors.primary, size: 40),
                     ),
                   ),
                   const SizedBox(height: 14),
                   Text(
-                    'EQUITYWORLD',
-                    style: AppTextStyles.h3(color: AppColors.textPrimary)
+                    'Trust by Equityworld',
+                    style: AppTextStyles.h3(color: AppColors.darkButtonBottom)
                         .copyWith(fontWeight: FontWeight.w800, letterSpacing: 1.2),
                   ),
                 ],

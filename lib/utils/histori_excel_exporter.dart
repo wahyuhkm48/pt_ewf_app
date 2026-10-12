@@ -60,7 +60,7 @@ class HistoriExcelExporter {
         ),
       ],
       subject: 'Data Historis $namaProduk',
-      text: 'Data Historis $namaProduk - EQUITYWORLD',
+      text: 'Data Historis $namaProduk - Trust by Equityworld'
     );
   }
 
