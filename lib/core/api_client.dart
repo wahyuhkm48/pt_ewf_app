@@ -76,7 +76,6 @@ class ApiClient {
 
   Future<void> saveToken(String token) async => _storage.write(key: 'auth_token', value: token);
   Future<void> clearToken() async => _storage.delete(key: 'auth_token');
-  Future<String?> getToken() async => _storage.read(key: 'auth_token');
 }
 
 class ApiException implements Exception {

@@ -45,7 +45,6 @@ class _CustomBottomNavState extends State<CustomBottomNav> {
   }
 
   void _handleActionTap(SpeedDialAction action) {
-    debugPrint('>>> Speed dial tapped: ${action.label}');
     setState(() => _isExpanded = false);
     action.onTap();
   }

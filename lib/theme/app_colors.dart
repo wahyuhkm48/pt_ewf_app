@@ -23,7 +23,6 @@ class AppColors {
   static const Color secondarySoft = Color(0xFFBBD6FB);
 
   // Tertiary — hijau
-  static const Color tertiary = Color(0xFF13EC8E);
   static const Color success = Color(0xFF13A868);
   static const Color successBg = Color(0xFFDCF9EB);
 

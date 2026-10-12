@@ -66,10 +66,7 @@ class _MainShellState extends State<MainShell> {
                 SpeedDialAction(
                   iconAsset: 'assets/images/icons/emas_fisik.png',
                   label: 'Emas Fisik',
-                  onTap: () {
-                    debugPrint('>>> onTap Emas Fisik jalan, context mounted: $mounted');
-                    _openCalculator(const EmasFisikPage());
-                  },
+                  onTap: () => _openCalculator(const EmasFisikPage()),
                 ),
               ],
             ),

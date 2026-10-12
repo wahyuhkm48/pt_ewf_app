@@ -21,7 +21,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint('>>>>> SETTINGS PAGE KEBANGUN <<<<<');
     final auth = context.watch<AuthViewModel>();
     final employee = auth.employee;
 

@@ -23,38 +23,10 @@ class _TradingViewChartState extends State<TradingViewChart> {
   @override
   void initState() {
     super.initState();
-    _controller = WebViewController()
+        _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.transparent)
       ..enableZoom(false)
-      ..addJavaScriptChannel(
-        'FlutterConsole',
-        onMessageReceived: (message) {
-          debugPrint('🟡 JS LOG: ${message.message}');
-        },
-      )
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onWebResourceError: (error) {
-            debugPrint('❌ TradingView WebView error: ${error.description} (code: ${error.errorCode}, type: ${error.errorType})');
-          },
-          onPageFinished: (url) async {
-            debugPrint('✅ TradingView WebView page finished loading: $url');
-            await Future.delayed(const Duration(seconds: 3));
-            try {
-              final result = await _controller.runJavaScriptReturningResult(
-                "document.querySelector('.tradingview-widget-container__widget').innerHTML.length"
-              );
-              debugPrint('🔍 (setelah 3 detik) Widget container innerHTML length: $result');
-            } catch (e) {
-              debugPrint('🔍 Gagal cek innerHTML: $e');
-            }
-          },
-          onProgress: (progress) {
-            debugPrint('⏳ TradingView WebView loading: $progress%');
-          },
-        ),
-      )
       ..loadHtmlString(
         _buildHtml(widget.symbol, widget.interval),
         baseUrl: 'https://www.tradingview.com',
@@ -92,11 +64,6 @@ class _TradingViewChartState extends State<TradingViewChart> {
   </style>
 </head>
 <body>
-  <script>
-    window.onerror = function(message, source, lineno, colno, error) {
-      FlutterConsole.postMessage('window.onerror: ' + message + ' at ' + source + ':' + lineno);
-    };
-  </script>
   <div class="tradingview-widget-container">
     <div class="tradingview-widget-container__widget"></div>
   </div>
@@ -105,12 +72,6 @@ class _TradingViewChartState extends State<TradingViewChart> {
     s.src = 'https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js';
     s.type = 'text/javascript';
     s.async = true;
-    s.onload = function() {
-      FlutterConsole.postMessage('script onload: BERHASIL di-download');
-    };
-    s.onerror = function(e) {
-      FlutterConsole.postMessage('script onerror: GAGAL di-download - ' + JSON.stringify(e));
-    };
     s.innerHTML = JSON.stringify({
       "allow_symbol_change": true,
       "calendar": false,
