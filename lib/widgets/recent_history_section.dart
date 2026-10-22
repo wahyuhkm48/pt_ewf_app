@@ -1,6 +1,7 @@
 // lib/widgets/recent_history_section.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../widgets/skeleton.dart';
 import '../models/recent_history_item.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
@@ -48,10 +49,7 @@ class RecentHistorySection extends StatelessWidget {
 
   Widget _buildBody(BuildContext context, RecentHistoryViewModel vm) {
     if (vm.isLoading && vm.items.isEmpty) {
-      return const SizedBox(
-        height: 120,
-        child: Center(child: CircularProgressIndicator()),
-      );
+      return const SkeletonHistoryList(count: 3);
     }
 
     if (vm.errorMessage != null && vm.items.isEmpty) {

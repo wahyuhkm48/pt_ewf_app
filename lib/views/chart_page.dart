@@ -5,6 +5,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/tradingview_chart.dart';
+import '../widgets/skeleton.dart';
 import '../viewmodels/histori_viewmodel.dart';
 import '../models/histori_data_model.dart';
 import '../utils/histori_excel_exporter.dart';
@@ -155,7 +156,7 @@ class _ChartPageState extends State<ChartPage> {
                     ),
                     Builder(builder: (context) {
                       if (vm.isLoading && !vm.hasData(_selectedTab)) {
-                        return const Padding(padding: EdgeInsets.symmetric(vertical: 28), child: Center(child: CircularProgressIndicator()));
+                        return const SkeletonTableRows();
                       }
                       if (vm.errorMessage != null && !vm.hasData(_selectedTab)) {
                         return GestureDetector(

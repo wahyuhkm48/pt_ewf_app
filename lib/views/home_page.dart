@@ -9,13 +9,15 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/recent_history_section.dart';
+import '../widgets/news_fallback_cover.dart';
+import '../widgets/skeleton.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../viewmodels/recent_history_viewmodel.dart';
+import '../viewmodels/auth_viewmodel.dart';
 import '../utils/greeting.dart';
 import '../utils/page_transitions.dart';
-import '../viewmodels/auth_viewmodel.dart';
-import '../widgets/news_fallback_cover.dart';
+
 
 const String kNewsCombinedQuery = 'Federal Reserve OR interest rate';
 
@@ -107,7 +109,7 @@ class _HomePageState extends State<HomePage> {
                 height: 180,
                 child: Builder(builder: (context) {
                   if (vm.isLoading && vm.articles == null) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const SkeletonNewsCarousel();
                   }
                   if (vm.errorMessage != null && vm.articles == null) {
                     return const EmptyState(icon: Icons.error_outline_rounded, title: 'Gagal memuat berita');

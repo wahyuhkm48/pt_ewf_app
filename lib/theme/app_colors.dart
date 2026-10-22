@@ -50,4 +50,8 @@ class AppColors {
 
   // Overlay gelap di atas foto berita (sama dengan Colors.black87)
   static const Color overlayDark = Color(0xDD000000);
+
+  // Skeleton loading
+  static const Color skeletonBase = Color(0xFFE6E6E6);
+  static const Color skeletonHighlight = Color(0xFFF7F7F7);
 }

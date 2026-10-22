@@ -4,11 +4,14 @@ import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
+import '../widgets/news_fallback_cover.dart';
+import '../widgets/skeleton.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../utils/page_transitions.dart';
 import 'news_detail_page.dart';
-import '../widgets/news_fallback_cover.dart';
+
+
 
 class HotNewsPage extends StatefulWidget {
   final String query;
@@ -51,7 +54,7 @@ class _HotNewsPageState extends State<HotNewsPage> {
               Expanded(
                 child: Builder(builder: (context) {
                   if (vm.isLoading && vm.articles == null) {
-                    return const Center(child: CircularProgressIndicator());
+                    return const SkeletonNewsHeroList();
                   }
                   if (vm.errorMessage != null && vm.articles == null) {
                     return const Center(child: EmptyState(icon: Icons.error_outline_rounded, title: 'Gagal memuat berita'));

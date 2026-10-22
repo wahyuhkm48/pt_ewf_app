@@ -5,6 +5,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/history_tiles.dart';
+import '../widgets/skeleton.dart';
 import '../services/pivot_point_service.dart';
 import '../services/nest_service.dart';
 import '../services/emas_fisik_service.dart';
@@ -120,7 +121,10 @@ class _HistoryPageState extends State<HistoryPage> {
 
   Widget _buildBody() {
     if (_loading) {
-      return const Center(child: CircularProgressIndicator());
+      return const SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
+        child: SkeletonHistoryList(count: 7),
+      );
     }
 
     if (_error != null) {
