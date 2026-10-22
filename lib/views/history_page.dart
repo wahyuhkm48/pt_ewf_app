@@ -18,7 +18,9 @@ import 'nest_detail_page.dart';
 import 'emas_fisik_detail_page.dart';
 
 class HistoryPage extends StatefulWidget {
-  const HistoryPage({super.key});
+  /// true saat tab History sedang tampil (diatur oleh MainShell).
+  final bool isActive;
+  const HistoryPage({super.key, this.isActive = false});
 
   @override
   State<HistoryPage> createState() => _HistoryPageState();
@@ -28,6 +30,7 @@ class _HistoryPageState extends State<HistoryPage> {
   int _tab = 0; // 0 = Pivot Point, 1 = Nest, 2 = Emas Fisik
 
   bool _loading = true;
+  bool _inFlight = false; // cegah dua pemuatan berjalan bersamaan
   String? _error;
   List<PivotPointModel> _pivotHistory = [];
   List<NestModel> _nestHistory = [];
@@ -42,9 +45,23 @@ class _HistoryPageState extends State<HistoryPage> {
     _load();
   }
 
-  /// [silent] = true dipakai oleh tarik-ke-bawah: list lama tetap tampil
-  /// (tidak diganti spinner layar penuh), indikator refresh bawaan yang jalan.
+  @override
+  void didUpdateWidget(covariant HistoryPage oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Tab History baru saja dibuka.
+    // Kalau sebelumnya gagal: muat penuh (skeleton) sebagai percobaan ulang.
+    // Kalau tidak: refresh diam-diam, daftar lama tetap tampil.
+    if (widget.isActive && !oldWidget.isActive) {
+      _load(silent: _error == null);
+    }
+  }
+
+  /// [silent] = true dipakai oleh tarik-ke-bawah dan saat tab dibuka:
+  /// list lama tetap tampil (tidak diganti skeleton layar penuh).
   Future<void> _load({bool silent = false}) async {
+    if (_inFlight) return;
+    _inFlight = true;
+
     if (!silent) {
       setState(() {
         _loading = true;
@@ -75,9 +92,10 @@ class _HistoryPageState extends State<HistoryPage> {
           const SnackBar(content: Text('Gagal memuat ulang riwayat')),
         );
       } else {
-        setState(() => _error = e.toString());
+        setState(() => _error = 'Server sedang sibuk. Tarik ke bawah untuk mencoba lagi.');
       }
     } finally {
+      _inFlight = false;
       if (mounted && !silent) setState(() => _loading = false);
     }
   }

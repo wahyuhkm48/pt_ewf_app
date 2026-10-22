@@ -37,7 +37,7 @@ class _MainShellState extends State<MainShell> {
   Widget build(BuildContext context) {
     final pages = [
       HomePage(onViewAllHistory: () => setState(() => _currentIndex = 1)),
-      HistoryPage(key: ValueKey(_historyVersion)),
+      HistoryPage(key: ValueKey(_historyVersion), isActive: _currentIndex == 1),
       const ChartPage(),
       const SettingsPage(),
     ];
