@@ -1,5 +1,6 @@
 // views/home_screen.dart
 import 'dart:async';
+import 'dart:math' show Random;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'hot_news_page.dart';
@@ -93,26 +94,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(color: AppColors.primarySoft, borderRadius: BorderRadius.circular(20)),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Welcome!', style: AppTextStyles.labelLg()),
-                          SizedBox(height: 6),
-                          Text("Let's schedule your projects", style: AppTextStyles.bodySm(color: AppColors.textPrimary)),
-                        ],
-                      ),
-                    ),
-                    const Icon(Icons.laptop_mac_rounded, size: 48, color: AppColors.primaryDark),
-                  ],
-                ),
-              ),
+              const _WelcomeCard(),
               const SizedBox(height: 24),
               _SectionHeader(
                 title: 'Information',
@@ -218,6 +200,80 @@ class _NewsCard extends StatelessWidget {
                 ],
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WelcomeCard extends StatefulWidget {
+  const _WelcomeCard();
+
+  @override
+  State<_WelcomeCard> createState() => _WelcomeCardState();
+}
+
+class _WelcomeCardState extends State<_WelcomeCard> {
+  // (ikon, judul, isi). Tambah atau ubah pesan di sini.
+  static const _messages = <(IconData, String, String)>[
+    (Icons.waving_hand_rounded, 'Selamat datang!', 'Pantau pasar dan hitung peluangmu dengan lebih tenang.'),
+    (Icons.calculate_outlined, 'Siap menghitung?', 'Coba Pivot Point untuk melihat level support dan resistance.'),
+    (Icons.show_chart_rounded, 'Pantau grafik', 'Lihat Gold, Nikkei, dan Hang Seng di menu Chart.'),
+    (Icons.savings_outlined, 'Hitung emas fisik', 'Cek selisih harga dan estimasi keuntunganmu.'),
+    (Icons.insights_rounded, 'Sinyal harian', 'Bandingkan Close kemarin dan Open hari ini lewat Nest.'),
+    (Icons.newspaper_rounded, 'Kabar terbaru', 'Baca berita pasar dari Bloomberg, CNBC, dan Reuters.'),
+    (Icons.history_rounded, 'Riwayat tersimpan', 'Lihat kembali hasil perhitunganmu di menu History.'),
+  ];
+
+  late int _index = Random().nextInt(_messages.length);
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 6), (_) {
+      if (!mounted) return;
+      setState(() => _index = (_index + 1) % _messages.length);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final m = _messages[_index];
+
+    return Container(
+      width: double.infinity,
+      alignment: Alignment.centerLeft,
+      constraints: const BoxConstraints(minHeight: 104),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: AppColors.primarySoft,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 500),
+        child: Row(
+          key: ValueKey(_index),
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(m.$2, style: AppTextStyles.labelLg()),
+                  const SizedBox(height: 6),
+                  Text(m.$3, style: AppTextStyles.bodySm(color: AppColors.textPrimary)),
+                ],
+              ),
+            ),
+            const SizedBox(width: 12),
+            Icon(m.$1, size: 48, color: AppColors.primaryDark),
           ],
         ),
       ),
