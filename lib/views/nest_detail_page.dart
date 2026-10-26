@@ -5,6 +5,7 @@ import '../theme/app_text_styles.dart';
 import '../models/nest_model.dart';
 import '../widgets/action_badge.dart';
 import '../widgets/mini_stat.dart';
+import '../widgets/exportable_area.dart';
 import '../utils/asset_labels.dart';
 
 class NestDetailPage extends StatelessWidget {
@@ -50,20 +51,30 @@ class NestDetailPage extends StatelessWidget {
                   style: AppTextStyles.bodySm()),
               const SizedBox(height: 20),
 
-              ActionBadge(action: item.action),
-              const SizedBox(height: 16),
-
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.divider),
-                ),
-                child: Row(
+              ExportableArea(
+                namaFile: 'nest_${item.asset}',
+                judul: 'Nest',
+                subjudul: '${assetLabel(item.asset)} • ${_formatDate(item.tanggal)}',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MiniStat(label: 'Open (Hari ini)', value: item.open != null ? item.open!.toStringAsFixed(2) : '-'),
-                    MiniStat(label: 'Close (Kemarin)', value: item.close.toStringAsFixed(2)),
+                    ActionBadge(action: item.action),
+                    const SizedBox(height: 16),
+
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.divider),
+                      ),
+                      child: Row(
+                        children: [
+                          MiniStat(label: 'Open (Hari ini)', value: item.open != null ? item.open!.toStringAsFixed(2) : '-'),
+                          MiniStat(label: 'Close (Kemarin)', value: item.close.toStringAsFixed(2)),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

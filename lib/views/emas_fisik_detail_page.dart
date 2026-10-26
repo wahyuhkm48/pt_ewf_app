@@ -4,6 +4,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../models/emas_fisik_model.dart';
 import '../widgets/mini_stat.dart';
+import '../widgets/exportable_area.dart';
 
 class EmasFisikDetailPage extends StatelessWidget {
   final EmasFisikModel item;
@@ -50,39 +51,49 @@ class EmasFisikDetailPage extends StatelessWidget {
               Text(_formatDate(item.tanggal), style: AppTextStyles.bodySm()),
               const SizedBox(height: 20),
 
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.symmetric(vertical: 14),
-                decoration: BoxDecoration(
-                  color: (untung ? AppColors.success : AppColors.danger).withValues(alpha: 0.12),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: untung ? AppColors.success : AppColors.danger),
-                ),
+              ExportableArea(
+                namaFile: 'emas_fisik',
+                judul: 'Emas Fisik',
+                subjudul: _formatDate(item.tanggal),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(untung ? 'UNTUNG' : 'RUGI',
-                        style: AppTextStyles.labelBase(color: untung ? AppColors.success : AppColors.danger).copyWith(letterSpacing: 1)),
-                    const SizedBox(height: 4),
-                    Text(item.profit.toStringAsFixed(2),
-                        style: AppTextStyles.h2(color: untung ? AppColors.success : AppColors.danger)),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 16),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      decoration: BoxDecoration(
+                        color: (untung ? AppColors.success : AppColors.danger).withValues(alpha: 0.12),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: untung ? AppColors.success : AppColors.danger),
+                      ),
+                      child: Column(
+                        children: [
+                          Text(untung ? 'UNTUNG' : 'RUGI',
+                              style: AppTextStyles.labelBase(color: untung ? AppColors.success : AppColors.danger).copyWith(letterSpacing: 1)),
+                          const SizedBox(height: 4),
+                          Text(item.profit.toStringAsFixed(2),
+                              style: AppTextStyles.h2(color: untung ? AppColors.success : AppColors.danger)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
 
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.divider),
-                ),
-                child: Row(
-                  children: [
-                    MiniStat(label: 'HHB', value: item.hhb.toStringAsFixed(2)),
-                    MiniStat(label: 'HHJ', value: item.hhj.toStringAsFixed(2)),
-                    MiniStat(label: 'Selisih', value: item.selisih.toStringAsFixed(2)),
-                    MiniStat(label: 'Berat', value: '${item.beratGram.toStringAsFixed(2)} gr'),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.divider),
+                      ),
+                      child: Row(
+                        children: [
+                          MiniStat(label: 'HHB', value: item.hhb.toStringAsFixed(2)),
+                          MiniStat(label: 'HHJ', value: item.hhj.toStringAsFixed(2)),
+                          MiniStat(label: 'Selisih', value: item.selisih.toStringAsFixed(2)),
+                          MiniStat(label: 'Berat', value: '${item.beratGram.toStringAsFixed(2)} gr'),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

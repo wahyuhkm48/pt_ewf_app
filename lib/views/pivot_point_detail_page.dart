@@ -5,6 +5,7 @@ import '../theme/app_text_styles.dart';
 import '../models/pivot_point_model.dart';
 import '../widgets/action_badge.dart';
 import '../widgets/mini_stat.dart';
+import '../widgets/exportable_area.dart';
 import '../utils/pivot_point_levels.dart';
 import '../utils/asset_labels.dart';
 
@@ -52,36 +53,46 @@ class PivotPointDetailPage extends StatelessWidget {
                   style: AppTextStyles.bodySm()),
               const SizedBox(height: 20),
 
-              if (item.action != null) ...[
-                ActionBadge(action: item.action!),
-                const SizedBox(height: 16),
-              ],
-
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: AppColors.surface,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.divider),
-                ),
-                child: Row(
+              ExportableArea(
+                namaFile: 'pivot_${item.asset ?? 'riwayat'}',
+                judul: 'Pivot Point',
+                subjudul: '${assetLabel(item.asset)} • ${_formatDate(item.tanggal)}',
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    MiniStat(label: 'Open', value: item.open != null ? item.open!.toStringAsFixed(2) : '-'),
-                    MiniStat(label: 'High', value: item.high.toStringAsFixed(2)),
-                    MiniStat(label: 'Low', value: item.low.toStringAsFixed(2)),
-                    MiniStat(label: 'Close', value: item.close.toStringAsFixed(2)),
+                    if (item.action != null) ...[
+                      ActionBadge(action: item.action!),
+                      const SizedBox(height: 16),
+                    ],
+
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.divider),
+                      ),
+                      child: Row(
+                        children: [
+                          MiniStat(label: 'Open', value: item.open != null ? item.open!.toStringAsFixed(2) : '-'),
+                          MiniStat(label: 'High', value: item.high.toStringAsFixed(2)),
+                          MiniStat(label: 'Low', value: item.low.toStringAsFixed(2)),
+                          MiniStat(label: 'Close', value: item.close.toStringAsFixed(2)),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+
+                    Container(
+                      decoration: BoxDecoration(
+                        color: AppColors.background,
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.divider),
+                      ),
+                      child: Column(children: buildPivotLevelRows(item)),
+                    ),
                   ],
                 ),
-              ),
-              const SizedBox(height: 16),
-
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.background,
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppColors.divider),
-                ),
-                child: Column(children: buildPivotLevelRows(item)),
               ),
             ],
           ),

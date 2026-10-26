@@ -6,6 +6,7 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../viewmodels/emas_fisik_viewmodel.dart';
 import '../widgets/education_sections.dart';
+import '../widgets/exportable_area.dart';
 
 class EmasFisikPage extends StatefulWidget {
   const EmasFisikPage({super.key});
@@ -174,30 +175,40 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
 
               if (result != null) ...[
                 const SizedBox(height: 28),
-                Text('Hasil Perhitungan',
-                    style: AppTextStyles.h3(color: AppColors.primary)),
-                const SizedBox(height: 12),
-                _ResultCard(number: 1, title: 'HHB (Harga Hitung Beli)', formula: 'HB × Kurs ÷ 31,1',
-                    value: 'Rp ${_formatNumber(result.hhb)}', valueColor: AppColors.primary),
-                const SizedBox(height: 12),
-                _ResultCard(number: 2, title: 'HHJ (Harga Hitung Jual)', formula: 'HJ × Kurs ÷ 31,1',
-                    value: 'Rp ${_formatNumber(result.hhj)}', valueColor: AppColors.primary),
-                const SizedBox(height: 12),
-                _ResultCard(number: 3, title: 'Selisih (HHJ - HHB)', formula: 'HHJ - HHB',
-                    value: '${result.selisih >= 0 ? '+' : ''}Rp ${_formatNumber(result.selisih)}',
-                    valueColor: result.selisih >= 0 ? AppColors.success : AppColors.danger),
-                const SizedBox(height: 12),
-                _ResultCard(number: 4, title: 'Berat Emas (Gram)', formula: 'Modal ÷ HHB',
-                    value: '${_formatDecimal(result.beratGram)} gram', valueColor: AppColors.primary),
-                const SizedBox(height: 12),
-                _ResultCard(number: 5, title: 'Keuntungan', formula: 'Selisih × Gram',
-                    value: '${result.profit >= 0 ? '+' : ''}Rp ${_formatNumber(result.profit)}',
-                    valueColor: result.profit >= 0 ? AppColors.success : AppColors.danger),
-                const SizedBox(height: 16),
-                EmasFisikReadingCard(
-                  selisih: result.selisih,
-                  beratGram: result.beratGram,
-                  profit: result.profit,
+                ExportableArea(
+                  namaFile: 'emas_fisik',
+                  judul: 'Emas Fisik',
+                  subjudul: formatTanggalIndo(result.tanggal ?? DateTime.now()),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Hasil Perhitungan',
+                          style: AppTextStyles.h3(color: AppColors.primary)),
+                      const SizedBox(height: 12),
+                      _ResultCard(number: 1, title: 'HHB (Harga Hitung Beli)', formula: 'HB × Kurs ÷ 31,1',
+                          value: 'Rp ${_formatNumber(result.hhb)}', valueColor: AppColors.primary),
+                      const SizedBox(height: 12),
+                      _ResultCard(number: 2, title: 'HHJ (Harga Hitung Jual)', formula: 'HJ × Kurs ÷ 31,1',
+                          value: 'Rp ${_formatNumber(result.hhj)}', valueColor: AppColors.primary),
+                      const SizedBox(height: 12),
+                      _ResultCard(number: 3, title: 'Selisih (HHJ - HHB)', formula: 'HHJ - HHB',
+                          value: '${result.selisih >= 0 ? '+' : ''}Rp ${_formatNumber(result.selisih)}',
+                          valueColor: result.selisih >= 0 ? AppColors.success : AppColors.danger),
+                      const SizedBox(height: 12),
+                      _ResultCard(number: 4, title: 'Berat Emas (Gram)', formula: 'Modal ÷ HHB',
+                          value: '${_formatDecimal(result.beratGram)} gram', valueColor: AppColors.primary),
+                      const SizedBox(height: 12),
+                      _ResultCard(number: 5, title: 'Keuntungan', formula: 'Selisih × Gram',
+                          value: '${result.profit >= 0 ? '+' : ''}Rp ${_formatNumber(result.profit)}',
+                          valueColor: result.profit >= 0 ? AppColors.success : AppColors.danger),
+                      const SizedBox(height: 16),
+                      EmasFisikReadingCard(
+                        selisih: result.selisih,
+                        beratGram: result.beratGram,
+                        profit: result.profit,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ],
