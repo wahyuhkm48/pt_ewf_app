@@ -21,7 +21,8 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
 
   String _formatJoinDate(DateTime? date) {
     if (date == null) return '-';
-    return '${date.day} ${_months[date.month - 1]} ${date.year}';
+    final local = date.toLocal(); // UTC dari server -> zona waktu HP
+    return '${local.day} ${_months[local.month - 1]} ${local.year}';
   }
 
   Future<void> _editFullName(AuthViewModel auth) async {
