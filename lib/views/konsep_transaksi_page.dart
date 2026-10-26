@@ -11,7 +11,9 @@ import '../models/nest_model.dart';
 import '../widgets/action_badge.dart';
 import '../widgets/mini_stat.dart';
 import '../widgets/education_sections.dart';
+import '../widgets/exportable_area.dart';
 import '../utils/pivot_point_levels.dart';
+import '../utils/asset_labels.dart';
 
 enum _KalkulatorMode { pivotPoint, nest }
 enum _SumberData { otomatis, manual }
@@ -497,8 +499,30 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
                   child: Text(errorMessage, style: AppTextStyles.bodySm(color: AppColors.danger)),
                 ),
 
-              if (_mode == _KalkulatorMode.pivotPoint && pivotResult != null) ..._buildPivotPointResult(pivotResult),
-              if (_mode == _KalkulatorMode.nest && nestResult != null) ..._buildNestResult(nestResult),
+              if (_mode == _KalkulatorMode.pivotPoint && pivotResult != null) ...[
+                const SizedBox(height: 28),
+                ExportableArea(
+                  namaFile: 'pivot_${pivotResult.asset ?? 'manual'}',
+                  judul: 'Pivot Point',
+                  subjudul: _subjudulExport(pivotResult.asset, pivotResult.tanggal),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _buildPivotPointResult(pivotResult),
+                  ),
+                ),
+              ],
+              if (_mode == _KalkulatorMode.nest && nestResult != null) ...[
+                const SizedBox(height: 28),
+                ExportableArea(
+                  namaFile: 'nest_${nestResult.asset}',
+                  judul: 'Nest',
+                  subjudul: _subjudulExport(nestResult.asset, nestResult.tanggal),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: _buildNestResult(nestResult),
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -506,10 +530,16 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
     );
   }
 
+  String _subjudulExport(String? asset, DateTime? tanggal) {
+    final label = assetLabel(asset);
+    return tanggal == null
+        ? '$label • Perhitungan manual' // hasil manual tidak punya tanggal
+        : '$label • ${formatTanggalIndo(tanggal)}';
+  }
+
   // Indikator: PP > O = buy, PP < O = sell, PP == O = netral
   List<Widget> _buildPivotPointResult(PivotPointModel result) {
     return [
-      const SizedBox(height: 28),
       Text('Hasil Pivot Point',
           style: AppTextStyles.h3(color: AppColors.primary)),
       const SizedBox(height: 12),
@@ -558,7 +588,6 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
 
   List<Widget> _buildNestResult(NestModel result) {
     return [
-      const SizedBox(height: 28),
       Text('Hasil Nest',
           style: AppTextStyles.h3(color: AppColors.primary)),
       const SizedBox(height: 12),

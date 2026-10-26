@@ -21,6 +21,7 @@ class NestViewModel extends ChangeNotifier {
     required String asset,
     required DateTime tanggal,
   }) async {
+    if (isLoading) return;
     isLoading = true;
     errorMessage = null;
     notifyListeners();

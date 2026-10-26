@@ -38,6 +38,7 @@ class EmasFisikViewModel extends ChangeNotifier {
     required double kurs,
     required double modal,
   }) async {
+    if (isLoading) return;
     isLoading = true;
     errorMessage = null;
     notifyListeners();

@@ -151,8 +151,12 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: _hitung,
-                  icon: const Icon(Icons.calculate_rounded, color: Colors.white),
+                  onPressed: vm.isLoading ? null : _hitung,
+                  icon: vm.isLoading
+                      ? const SizedBox(
+                          width: 18, height: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                      : const Icon(Icons.calculate_rounded, color: Colors.white),
                   label: Text('Hitung', style: AppTextStyles.labelLg(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primary,
