@@ -20,6 +20,7 @@ import '../utils/page_transitions.dart';
 
 
 const String kNewsCombinedQuery = 'Federal Reserve OR interest rate';
+const int kHomeNewsLimit = 10; 
 
 class HomePage extends StatefulWidget {
   /// Dipanggil saat "view all" di Riwayat Terbaru ditekan (pindah ke tab History).
@@ -114,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                   if (vm.errorMessage != null && vm.articles == null) {
                     return const EmptyState(icon: Icons.error_outline_rounded, title: 'Gagal memuat berita');
                   }
-                  final articles = vm.articles ?? [];
+                  final articles = (vm.articles ?? []).take(kHomeNewsLimit).toList();
                   if (articles.isEmpty) {
                     return const EmptyState(icon: Icons.article_outlined, title: 'Belum ada berita');
                   }
