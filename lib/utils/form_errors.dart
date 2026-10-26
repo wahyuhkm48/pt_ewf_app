@@ -51,6 +51,17 @@ String? alasanEmailSalah(String email) {
   if (!RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]{2,}$').hasMatch(e)) {
     return 'format tidak valid, contoh: nama@email.com.';
   }
+    return null;
+}
+
+/// Khusus pendaftaran: selain format valid, email wajib Gmail.
+/// Sengaja TIDAK dipakai di login supaya akun lama non-Gmail tetap bisa masuk.
+String? alasanEmailRegisterSalah(String email) {
+  final dasar = alasanEmailSalah(email);
+  if (dasar != null) return dasar;
+  if (!RegExp(r'^[^\s@]+@gmail\.com$', caseSensitive: false).hasMatch(email.trim())) {
+    return 'harus menggunakan Gmail dan berakhiran @gmail.com, contoh: nama@gmail.com.';
+  }
   return null;
 }
 
@@ -109,7 +120,7 @@ String? validasiRegister({
   if (nama.trim().length > 255) {
     masalah.add('Nama Lengkap: terlalu panjang, maksimal 255 karakter.');
   }
-  final e = alasanEmailSalah(email);
+  final e = alasanEmailRegisterSalah(email);
   if (e != null) masalah.add('Email: $e');
   final t = alasanTelpSalah(telp);
   if (t != null) masalah.add('Nomor Telepon: $t');

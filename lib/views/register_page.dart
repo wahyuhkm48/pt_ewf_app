@@ -52,7 +52,7 @@ class _RegisterPageState extends State<RegisterPage> {
 
     final sukses = await vm.register(
       namaLengkap: namaCtrl.text.trim(),
-      email: emailCtrl.text.trim(),
+      email: emailCtrl.text.trim().toLowerCase(),
       noTelp: normalisasiTelp(telpCtrl.text),
       password: passCtrl.text,
     );
@@ -119,8 +119,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
                     TextField(
                       controller: emailCtrl,
+                      keyboardType: TextInputType.emailAddress,
+                      autocorrect: false,
                       decoration: InputDecoration(
                         labelText: 'Email',
+                        hintText: 'nama@gmail.com',
+                        hintStyle: AppTextStyles.bodyMd(color: Colors.black.withValues(alpha: 0.3)),
                         labelStyle: AppTextStyles.bodyMd(),
                         enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.divider)),
                         focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: AppColors.primary)),
