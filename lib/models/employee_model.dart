@@ -27,4 +27,14 @@ class EmployeeModel {
         noTelp: json['no_telp'],
         createdAt: json['created_at'] != null ? DateTime.tryParse(json['created_at']) : null,
       );
+
+  Map<String, dynamic> toJson() => {
+        'user_id': userId,
+        'nama_lengkap': namaLengkap,
+        'email': email,
+        'role': role,
+        'foto': foto,
+        'no_telp': noTelp,
+        'created_at': createdAt?.toIso8601String(),
+      };
 }

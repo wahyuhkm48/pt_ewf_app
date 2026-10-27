@@ -14,6 +14,9 @@ class ApiClient {
 
   final _storage = const FlutterSecureStorage();
 
+  /// Dipanggil saat server menolak token (401). Diisi di main.dart.
+  Future<void> Function()? onUnauthorized;
+
   Future<Map<String, String>> _headers({bool withAuth = true}) async {
     final headers = {
       'Content-Type': 'application/json',
@@ -62,7 +65,7 @@ class ApiClient {
           headers: headers,
           body: jsonEncode(body),
         ));
-    return _handle(res);
+    return _handle(res, withAuth: withAuth);
   }
 
   Future<dynamic> put(String path, Map<String, dynamic> body) async {
@@ -95,7 +98,14 @@ class ApiClient {
     return _handle(res);
   }
 
-  dynamic _handle(http.Response res) {
+  dynamic _handle(http.Response res, {bool withAuth = true}) {
+    // Server menolak token: sesi berakhir. Login dengan password salah tidak
+    // lewat sini (withAuth = false, dan backend membalas 422).
+    if (res.statusCode == 401 && withAuth) {
+      onUnauthorized?.call();
+      throw ApiException('Sesi kamu berakhir. Silakan login lagi.', statusCode: 401);
+    }
+
     final decoded = jsonDecode(res.body);
     if (res.statusCode >= 200 && res.statusCode < 300) {
       return decoded;
@@ -103,16 +113,18 @@ class ApiClient {
     final message = decoded is Map && decoded['message'] != null
         ? decoded['message']
         : 'Terjadi kesalahan (${res.statusCode})';
-    throw ApiException(message.toString());
+    throw ApiException(message.toString(), statusCode: res.statusCode);
   }
 
+  Future<String?> readToken() async => _storage.read(key: 'auth_token');
   Future<void> saveToken(String token) async => _storage.write(key: 'auth_token', value: token);
   Future<void> clearToken() async => _storage.delete(key: 'auth_token');
 }
 
 class ApiException implements Exception {
   final String message;
-  ApiException(this.message);
+  final int? statusCode;
+  ApiException(this.message, {this.statusCode});
   @override
   String toString() => message;
 }

@@ -1,7 +1,10 @@
 // views/splash_page.dart
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
+import '../viewmodels/auth_viewmodel.dart';
 import 'onboarding_page.dart';
+import 'main_shell.dart';
 
 class _BubbleSpec {
   final double xFrac, yFrac, rFrac; // posisi & radius, relatif ke 393x852 (canvas referensi)
@@ -73,6 +76,12 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   Future<void> _runSequence() async {
+    // Cek sesi tersimpan sejak awal, berjalan bersamaan dengan animasi splash.
+    final sesi = context
+        .read<AuthViewModel>()
+        .restoreSession()
+        .timeout(const Duration(seconds: 8), onTimeout: () => false);
+
     await Future.delayed(const Duration(milliseconds: 800));
     if (!mounted) return;
     setState(() => _scattered = true);
@@ -82,12 +91,13 @@ class _SplashPageState extends State<SplashPage> {
     setState(() => _showLogo = true);
 
     await Future.delayed(const Duration(milliseconds: 2500));
+    final adaSesi = await sesi;
     if (!mounted) return;
 
     Navigator.of(context).pushReplacement(
       PageRouteBuilder(
         transitionDuration: const Duration(milliseconds: 700),
-        pageBuilder: (_, _, _) => const OnboardingPage(),
+        pageBuilder: (_, _, _) => adaSesi ? const MainShell() : const OnboardingPage(),
         transitionsBuilder: (_, animation, _, child) => FadeTransition(
           opacity: CurvedAnimation(parent: animation, curve: Curves.easeInOut),
           child: child,

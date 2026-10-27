@@ -12,6 +12,46 @@ class AuthViewModel extends ChangeNotifier {
   String? errorMessage;
   EmployeeModel? employee;
 
+  /// Dipanggil Splash. true = ada sesi tersimpan -> langsung ke halaman utama.
+  Future<bool> restoreSession() async {
+    try {
+      if (!await _service.hasToken()) return false;
+
+      // Ada profil tersimpan: masuk sekarang juga (berlaku offline),
+      // lalu verifikasi ke server diam-diam di latar belakang.
+      final cached = await _service.cachedEmployee();
+      if (cached != null) {
+        employee = cached;
+        notifyListeners();
+        _verifikasiDiLatarBelakang();
+        return true;
+      }
+
+      // Tidak ada profil tersimpan: harus ambil dari server (butuh internet).
+      employee = await _service.me();
+      notifyListeners();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  Future<void> _verifikasiDiLatarBelakang() async {
+    try {
+      employee = await _service.me();
+      notifyListeners();
+    } catch (_) {
+      // Offline atau server bermasalah: tetap pakai profil tersimpan.
+      // Kalau token ditolak (401), ApiClient.onUnauthorized yang mengurus.
+    }
+  }
+
+  /// Dipakai saat sesi berakhir (401).
+  void clearEmployee() {
+    employee = null;
+    notifyListeners();
+  }
+
   Future<bool> login(String email, String password) async {
     isLoading = true;
     errorMessage = null;
