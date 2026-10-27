@@ -1,9 +1,16 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'connectivity_service.dart';
 
 class ApiClient {
-  static const String baseUrl = 'https://pt-ewf-backend.vercel.app/api'; 
+  static const String baseUrl = 'https://pt-ewf-backend.vercel.app/api';
+  static const Duration _timeout = Duration(seconds: 30);
+
+  final ConnectivityService? connectivity;
+  ApiClient({this.connectivity});
 
   final _storage = const FlutterSecureStorage();
 
@@ -20,26 +27,51 @@ class ApiClient {
     return headers;
   }
 
+  /// Semua request lewat sini:
+  /// - sudah diketahui offline -> langsung gagal (tidak menunggu timeout)
+  /// - gagal jaringan -> cek ulang koneksi; kalau memang offline lempar OfflineException
+  Future<http.Response> _kirim(Future<http.Response> Function() request) async {
+    if (connectivity?.isOffline ?? false) throw OfflineException();
+    try {
+      return await request().timeout(_timeout);
+    } on SocketException catch (e) {
+      return _gagalJaringan(e);
+    } on http.ClientException catch (e) {
+      return _gagalJaringan(e);
+    } on TimeoutException catch (e) {
+      return _gagalJaringan(e);
+    }
+  }
+
+  Future<Never> _gagalJaringan(Object e) async {
+    await connectivity?.check();
+    if (connectivity?.isOffline ?? false) throw OfflineException();
+    throw e; // online tapi server bermasalah: biarkan pesanError() yang menjelaskan
+  }
+
   Future<dynamic> get(String path) async {
-    final res = await http.get(Uri.parse('$baseUrl$path'), headers: await _headers());
+    final headers = await _headers();
+    final res = await _kirim(() => http.get(Uri.parse('$baseUrl$path'), headers: headers));
     return _handle(res);
   }
 
   Future<dynamic> post(String path, Map<String, dynamic> body, {bool withAuth = true}) async {
-    final res = await http.post(
-      Uri.parse('$baseUrl$path'),
-      headers: await _headers(withAuth: withAuth),
-      body: jsonEncode(body),
-    );
+    final headers = await _headers(withAuth: withAuth);
+    final res = await _kirim(() => http.post(
+          Uri.parse('$baseUrl$path'),
+          headers: headers,
+          body: jsonEncode(body),
+        ));
     return _handle(res);
   }
 
   Future<dynamic> put(String path, Map<String, dynamic> body) async {
-    final res = await http.put(
-      Uri.parse('$baseUrl$path'),
-      headers: await _headers(),
-      body: jsonEncode(body),
-    );
+    final headers = await _headers();
+    final res = await _kirim(() => http.put(
+          Uri.parse('$baseUrl$path'),
+          headers: headers,
+          body: jsonEncode(body),
+        ));
     return _handle(res);
   }
 
@@ -50,16 +82,16 @@ class ApiClient {
     required String filename,
   }) async {
     final uri = Uri.parse('$baseUrl$path');
-    final request = http.MultipartRequest('POST', uri);
-
     final headers = await _headers();
     headers.remove('Content-Type'); // biar package http yang atur boundary multipart otomatis
-    request.headers.addAll(headers);
 
-    request.files.add(http.MultipartFile.fromBytes(fieldName, bytes, filename: filename));
-
-    final streamed = await request.send();
-    final res = await http.Response.fromStream(streamed);
+    final res = await _kirim(() async {
+      final request = http.MultipartRequest('POST', uri);
+      request.headers.addAll(headers);
+      request.files.add(http.MultipartFile.fromBytes(fieldName, bytes, filename: filename));
+      final streamed = await request.send();
+      return http.Response.fromStream(streamed);
+    });
     return _handle(res);
   }
 
@@ -81,6 +113,13 @@ class ApiClient {
 class ApiException implements Exception {
   final String message;
   ApiException(this.message);
+  @override
+  String toString() => message;
+}
+
+/// Dilempar saat request tidak bisa dikirim karena perangkat offline.
+class OfflineException implements Exception {
+  final String message = 'Tidak ada koneksi internet. Sambungkan ke internet lalu coba lagi.';
   @override
   String toString() => message;
 }

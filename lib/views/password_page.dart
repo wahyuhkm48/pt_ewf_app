@@ -5,6 +5,8 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../utils/form_errors.dart';
+import '../widgets/offline_widgets.dart';
+import '../core/connectivity_service.dart';
 
 class PasswordPage extends StatefulWidget {
   const PasswordPage({super.key});
@@ -70,6 +72,14 @@ class _PasswordPageState extends State<PasswordPage> {
 
   @override
   Widget build(BuildContext context) {
+    final online = context.watch<ConnectivityService>().isOnline;
+    if (!online) {
+      return const OfflinePageScaffold(
+        title: 'Password',
+        message: 'Mengganti password membutuhkan internet.',
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Password'),

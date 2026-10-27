@@ -7,6 +7,8 @@ import '../theme/app_text_styles.dart';
 import '../utils/form_errors.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/password_field.dart';
+import '../widgets/offline_widgets.dart';
+import '../core/connectivity_service.dart';
 import 'login_page.dart';
 import 'main_shell.dart';
 
@@ -68,6 +70,7 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     final vm = context.watch<AuthViewModel>();
+    final online = context.watch<ConnectivityService>().isOnline;
     final errorText = _localError;
 
     return Scaffold(
@@ -158,6 +161,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ],
 
+                    if (!online) ...[
+                      const SizedBox(height: 16),
+                      const OfflineNotice(
+                        compact: true,
+                        title: 'Pendaftaran butuh internet',
+                        message: 'Sambungkan ke internet untuk membuat akun.',
+                      ),
+                    ],
+
                     const SizedBox(height: 40),
 
                     SizedBox(
@@ -180,11 +192,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         : ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.secondary,
+                              disabledBackgroundColor: AppColors.secondary.withValues(alpha: 0.4),
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
                               elevation: 0,
                             ),
-                            onPressed: () => _submit(vm),
+                            onPressed: online ? () => _submit(vm) : null,
                             child: Text('Sign Up', style: AppTextStyles.labelLg(color: Colors.white)),
                           ),
                     ),

@@ -2,29 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'core/api_client.dart';
+import 'core/connectivity_service.dart';
 import 'services/auth_service.dart';
 import 'services/pivot_point_service.dart';
 import 'services/emas_fisik_service.dart';
 import 'services/histori_service.dart';
 import 'services/news_service.dart';
 import 'services/market_data_service.dart';
+import 'services/nest_service.dart';
 import 'theme/app_colors.dart';
 import 'viewmodels/auth_viewmodel.dart';
 import 'viewmodels/pivot_point_viewmodel.dart';
 import 'viewmodels/emas_fisik_viewmodel.dart';
 import 'viewmodels/histori_viewmodel.dart';
 import 'viewmodels/news_viewmodel.dart';
-import 'services/nest_service.dart';
 import 'viewmodels/nest_viewmodel.dart';
 import 'views/splash_page.dart';
 import 'viewmodels/recent_history_viewmodel.dart';
+import 'widgets/offline_widgets.dart';
 
 void main() {
-  final apiClient = ApiClient();
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final connectivity = ConnectivityService()..start();
+  final apiClient = ApiClient(connectivity: connectivity);
 
   runApp(
     MultiProvider(
       providers: [
+        ChangeNotifierProvider.value(value: connectivity),
         Provider(create: (_) => apiClient),
         ChangeNotifierProvider(create: (_) => AuthViewModel(AuthService(apiClient))),
         ChangeNotifierProvider(create: (_) => PivotPointViewModel(PivotPointService(apiClient))),
@@ -61,6 +67,7 @@ class MyApp extends StatelessWidget {
         textTheme: GoogleFonts.interTextTheme(),
         progressIndicatorTheme: const ProgressIndicatorThemeData(color: AppColors.primary),
       ),
+      builder: (context, child) => OfflineBannerHost(child: child!),
       home: const SplashPage(),
     );
   }

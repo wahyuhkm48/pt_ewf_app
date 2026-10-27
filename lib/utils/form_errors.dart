@@ -158,6 +158,7 @@ String? validasiGantiPassword({
 // ======================================================================
 
 String pesanError(Object e) {
+  if (e is OfflineException) return e.message;
   if (e is ApiException) return _terjemahkanServer(e.message);
 
   final s = e.toString();

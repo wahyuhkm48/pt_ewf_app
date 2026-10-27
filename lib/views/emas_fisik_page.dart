@@ -7,6 +7,8 @@ import '../theme/app_text_styles.dart';
 import '../viewmodels/emas_fisik_viewmodel.dart';
 import '../widgets/education_sections.dart';
 import '../widgets/exportable_area.dart';
+import '../widgets/offline_widgets.dart';
+import '../core/connectivity_service.dart';
 
 class EmasFisikPage extends StatefulWidget {
   const EmasFisikPage({super.key});
@@ -73,7 +75,15 @@ class _EmasFisikPageState extends State<EmasFisikPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+    Widget build(BuildContext context) {
+    final online = context.watch<ConnectivityService>().isOnline;
+    if (!online) {
+      return const OfflinePageScaffold(
+        title: 'Emas Fisik',
+        message: 'Kalkulator Emas Fisik memakai harga dan kurs terbaru dari server, jadi butuh internet.',
+      );
+    }
+
     final vm = context.watch<EmasFisikViewModel>();
     final result = vm.result;
 

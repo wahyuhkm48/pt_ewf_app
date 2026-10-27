@@ -4,6 +4,9 @@ import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../viewmodels/auth_viewmodel.dart';
+import '../widgets/avatar_ring.dart';
+import '../core/connectivity_service.dart';
+import '../utils/form_errors.dart';
 import 'login_page.dart';
 import 'account_information_page.dart';
 import 'password_page.dart';
@@ -11,7 +14,7 @@ import 'notification_page.dart';
 import 'language_page.dart';
 import 'help_page.dart';
 import 'about_page.dart';
-import '../widgets/avatar_ring.dart';
+
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -145,6 +148,25 @@ class SettingsPage extends StatelessWidget {
   }
 
   Future<void> _confirmLogout(BuildContext context, AuthViewModel auth) async {
+    // Logout harus menutup sesi di server, jadi butuh internet.
+    if (context.read<ConnectivityService>().isOffline) {
+      await showDialog<void>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: const Text('Logout butuh internet'),
+          content: const Text(
+            'Logout perlu menghubungi server untuk menutup sesi akunmu dengan aman. '
+            'Sambungkan ke internet dulu. Sementara itu kamu masih bisa memakai '
+            'hitung manual Pivot Point dan Nest.',
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Mengerti')),
+          ],
+        ),
+      );
+      return;
+    }
+
     final yakin = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
@@ -158,7 +180,18 @@ class SettingsPage extends StatelessWidget {
     );
 
     if (yakin == true && context.mounted) {
-      await auth.logout();
+      try {
+        await auth.logout();
+      } catch (e) {
+        // koneksi putus di tengah jalan, atau server error: user tetap login
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(pesanError(e))),
+          );
+        }
+        return;
+      }
+
       if (context.mounted) {
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (_) => const LoginPage()),

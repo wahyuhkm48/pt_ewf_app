@@ -12,8 +12,10 @@ import '../widgets/action_badge.dart';
 import '../widgets/mini_stat.dart';
 import '../widgets/education_sections.dart';
 import '../widgets/exportable_area.dart';
+import '../widgets/offline_widgets.dart';
 import '../utils/pivot_point_levels.dart';
 import '../utils/asset_labels.dart';
+import '../core/connectivity_service.dart';
 
 enum _KalkulatorMode { pivotPoint, nest }
 enum _SumberData { otomatis, manual }
@@ -96,6 +98,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
 
   void _hitung() {
     if (_sumberData == _SumberData.otomatis) {
+      if (context.read<ConnectivityService>().isOffline) return;
       if (_mode == _KalkulatorMode.pivotPoint) {
         context.read<PivotPointViewModel>().hitung(asset: _selectedAsset, tanggal: _selectedDate);
       } else {
@@ -251,7 +254,9 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
     final pivotVm = context.watch<PivotPointViewModel>();
     final nestVm = context.watch<NestViewModel>();
 
+    final online = context.watch<ConnectivityService>().isOnline;
     final isOtomatis = _sumberData == _SumberData.otomatis;
+    final butuhInternet = isOtomatis && !online; // mode pasar tidak bisa saat offline
     final isLoading = isOtomatis
         ? (_mode == _KalkulatorMode.pivotPoint ? pivotVm.isLoading : nestVm.isLoading)
         : false;
@@ -375,6 +380,20 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
               ),
               const SizedBox(height: 14),
 
+              if (butuhInternet) ...[
+                OfflineNotice(
+                  compact: true,
+                  title: 'Ambil dari Pasar butuh internet',
+                  message: 'Data pasar diambil dari server. Kamu tetap bisa menghitung dengan memasukkan angka sendiri.',
+                  alternativeLabel: 'Pakai Input Manual',
+                  onAlternative: () => setState(() {
+                    _sumberData = _SumberData.manual;
+                    _manualError = null;
+                  }),
+                ),
+                const SizedBox(height: 14),
+              ],
+
               if (_sumberData == _SumberData.otomatis) ...[
                 // Tanggal
                 Text('Tanggal', style: AppTextStyles.labelMd(),),
@@ -478,7 +497,7 @@ class _KonsepTransaksiPageState extends State<KonsepTransaksiPage> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
-                  onPressed: isLoading ? null : _hitung,
+                  onPressed: (isLoading || butuhInternet) ? null : _hitung,
                   icon: isLoading
                       ? const SizedBox(
                           width: 18, height: 18,

@@ -1,10 +1,13 @@
 // views/news_detail_screen.dart
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../models/news_model.dart';
 import '../widgets/news_fallback_cover.dart';
+import '../widgets/offline_widgets.dart';
+import '../core/connectivity_service.dart';
 
 class NewsDetailPage extends StatelessWidget {
   final NewsModel article;
@@ -27,6 +30,8 @@ class NewsDetailPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final online = context.select<ConnectivityService, bool>((n) => n.isOnline);
+
     return Scaffold(
       backgroundColor: AppColors.background,
       body: SingleChildScrollView(
@@ -101,19 +106,31 @@ class NewsDetailPage extends StatelessWidget {
             if (article.linkUrl != null && article.linkUrl!.isNotEmpty)
               Padding(
                 padding: const EdgeInsets.fromLTRB(20, 0, 20, 32),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton.icon(
-                    onPressed: () => _bukaSumberAsli(context),
-                    icon: const Icon(Icons.open_in_new_rounded, size: 18),
-                    label: Text('Baca Selengkapnya di ${article.sourceName}'),
-                    style: OutlinedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 14),
-                      side: const BorderSide(color: AppColors.primary),
-                      foregroundColor: AppColors.primary,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                child: Column(
+                  children: [
+                    if (!online) ...[
+                      const OfflineNotice(
+                        compact: true,
+                        title: 'Link sumber butuh internet',
+                        message: 'Artikel lengkap dibuka di browser, jadi perlu internet. Ringkasan di atas tetap bisa dibaca.',
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: online ? () => _bukaSumberAsli(context) : null,
+                        icon: const Icon(Icons.open_in_new_rounded, size: 18),
+                        label: Text('Baca Selengkapnya di ${article.sourceName}'),
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          side: BorderSide(color: online ? AppColors.primary : AppColors.divider),
+                          foregroundColor: AppColors.primary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
           ],

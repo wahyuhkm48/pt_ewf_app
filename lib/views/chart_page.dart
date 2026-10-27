@@ -6,6 +6,7 @@ import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/skeleton.dart';
 import '../widgets/tradingview_chart.dart';
+import '../widgets/offline_widgets.dart';
 import '../viewmodels/histori_viewmodel.dart';
 import '../models/histori_data_model.dart';
 import '../utils/histori_excel_exporter.dart';
@@ -175,6 +176,20 @@ class _ChartPageState extends State<ChartPage> {
 
   @override
   Widget build(BuildContext context) {
+    return SafeArea(
+      child: OnlineGate(
+        title: 'Chart butuh internet',
+        message: 'Chart TradingView dan data historis dimuat dari internet.',
+        onReconnect: () {
+          setState(() => _chartVersion++); // muat ulang TradingView
+          context.read<HistoriViewModel>().loadTab(_selectedTab, forceRefresh: true);
+        },
+        child: _buildOnline(context),
+      ),
+    );
+  }
+
+  Widget _buildOnline(BuildContext context) {
     final vm = context.watch<HistoriViewModel>();
     final all = vm.forTab(_selectedTab);
     final filtered = _applyFilter(all);

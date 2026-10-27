@@ -11,6 +11,7 @@ import '../widgets/empty_state.dart';
 import '../widgets/recent_history_section.dart';
 import '../widgets/news_fallback_cover.dart';
 import '../widgets/skeleton.dart';
+import '../widgets/offline_widgets.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../viewmodels/recent_history_viewmodel.dart';
@@ -108,7 +109,12 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(height: 12),
               SizedBox(
                 height: 180,
-                child: Builder(builder: (context) {
+                child: OnlineGate(
+                  compact: true,
+                  title: 'Berita butuh internet',
+                  message: 'Berita pasar dimuat dari internet.',
+                  onReconnect: () => context.read<NewsViewModel>().loadNews(forceRefresh: true),
+                  child: Builder(builder: (context) {
                   if (vm.isLoading && vm.articles == null) {
                     return const SkeletonNewsCarousel();
                   }
@@ -125,10 +131,17 @@ class _HomePageState extends State<HomePage> {
                     separatorBuilder: (_, _) => const SizedBox(width: 12),
                     itemBuilder: (context, index) => _NewsCard(article: articles[index]),
                   );
-                }),
+                  }),
+                ),
               ),
               const SizedBox(height: 24),
-              RecentHistorySection(onViewAll: widget.onViewAllHistory),
+              OnlineGate(
+                compact: true,
+                title: 'Riwayat butuh internet',
+                message: 'Riwayat perhitungan tersimpan di server.',
+                onReconnect: () => context.read<RecentHistoryViewModel>().load(silent: true),
+                child: RecentHistorySection(onViewAll: widget.onViewAllHistory),
+              ),
               const SizedBox(height: 24),
             ],
           ),

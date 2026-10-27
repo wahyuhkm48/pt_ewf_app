@@ -6,6 +6,8 @@ import '../theme/app_colors.dart';
 import '../theme/app_text_styles.dart';
 import '../viewmodels/auth_viewmodel.dart';
 import '../widgets/avatar_ring.dart';
+import '../widgets/offline_widgets.dart';
+import '../core/connectivity_service.dart';
 
 class AccountInformationPage extends StatefulWidget {
   const AccountInformationPage({super.key});
@@ -94,6 +96,14 @@ class _AccountInformationPageState extends State<AccountInformationPage> {
 
   @override
   Widget build(BuildContext context) {
+    final online = context.watch<ConnectivityService>().isOnline;
+    if (!online) {
+      return const OfflinePageScaffold(
+        title: 'Account Information',
+        message: 'Mengubah nama, nomor telepon, dan foto profil membutuhkan internet.',
+      );
+    }
+
     final auth = context.watch<AuthViewModel>();
     final employee = auth.employee;
 

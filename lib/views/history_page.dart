@@ -6,6 +6,7 @@ import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/history_tiles.dart';
 import '../widgets/skeleton.dart';
+import '../widgets/offline_widgets.dart';
 import '../services/pivot_point_service.dart';
 import '../services/nest_service.dart';
 import '../services/emas_fisik_service.dart';
@@ -118,7 +119,14 @@ class _HistoryPageState extends State<HistoryPage> {
               child: _buildTabSwitcher(),
             ),
             const Divider(color: AppColors.divider, height: 32),
-            Expanded(child: _buildBody()),
+            Expanded(
+              child: OnlineGate(
+                title: 'Riwayat butuh internet',
+                message: 'Riwayat perhitungan tersimpan di server. Hitung manual tetap bisa dipakai.',
+                onReconnect: () => _load(silent: _hasAnyData),
+                child: _buildBody(),
+              ),
+            ),
           ],
         ),
       ),

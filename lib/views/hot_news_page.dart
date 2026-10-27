@@ -6,6 +6,7 @@ import '../theme/app_text_styles.dart';
 import '../widgets/empty_state.dart';
 import '../widgets/news_fallback_cover.dart';
 import '../widgets/skeleton.dart';
+import '../widgets/offline_widgets.dart';
 import '../models/news_model.dart';
 import '../viewmodels/news_viewmodel.dart';
 import '../utils/page_transitions.dart';
@@ -52,24 +53,29 @@ class _HotNewsPageState extends State<HotNewsPage> {
               Text('Hot News', style: AppTextStyles.h1()),
               const SizedBox(height: 16),
               Expanded(
-                child: Builder(builder: (context) {
-                  if (vm.isLoading && vm.articles == null) {
-                    return const SkeletonNewsHeroList();
-                  }
-                  if (vm.errorMessage != null && vm.articles == null) {
-                    return const Center(child: EmptyState(icon: Icons.error_outline_rounded, title: 'Gagal memuat berita'));
-                  }
-                  final articles = vm.articles ?? [];
-                  if (articles.isEmpty) {
-                    return const Center(child: EmptyState(icon: Icons.article_outlined, title: 'Belum ada berita'));
-                  }
-                  return ListView.separated(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    itemCount: articles.length,
-                    separatorBuilder: (_, _) => const SizedBox(height: 16),
-                    itemBuilder: (context, index) => _HotNewsCard(article: articles[index]),
-                  );
-                }),
+                child: OnlineGate(
+                  title: 'Berita butuh internet',
+                  message: 'Berita pasar dimuat dari internet. Hitung manual Pivot Point dan Nest tetap bisa dipakai.',
+                  onReconnect: () => context.read<NewsViewModel>().loadNews(forceRefresh: true),
+                  child: Builder(builder: (context) {
+                    if (vm.isLoading && vm.articles == null) {
+                      return const SkeletonNewsHeroList();
+                    }
+                    if (vm.errorMessage != null && vm.articles == null) {
+                      return const Center(child: EmptyState(icon: Icons.error_outline_rounded, title: 'Gagal memuat berita'));
+                    }
+                    final articles = vm.articles ?? [];
+                    if (articles.isEmpty) {
+                      return const Center(child: EmptyState(icon: Icons.article_outlined, title: 'Belum ada berita'));
+                    }
+                    return ListView.separated(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      itemCount: articles.length,
+                      separatorBuilder: (_, _) => const SizedBox(height: 16),
+                      itemBuilder: (context, index) => _HotNewsCard(article: articles[index]),
+                    );
+                  }),
+                ),
               ),
             ],
           ),
