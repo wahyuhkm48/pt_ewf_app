@@ -231,15 +231,15 @@ class _WelcomeCard extends StatefulWidget {
 }
 
 class _WelcomeCardState extends State<_WelcomeCard> {
-  // (ikon, judul, isi). Tambah atau ubah pesan di sini.
-  static const _messages = <(IconData, String, String)>[
-    (Icons.waving_hand_rounded, 'Selamat datang!', 'Pantau pasar dan hitung peluangmu dengan lebih tenang.'),
-    (Icons.calculate_outlined, 'Siap menghitung?', 'Coba Pivot Point untuk melihat level support dan resistance.'),
-    (Icons.show_chart_rounded, 'Pantau grafik', 'Lihat Gold, Nikkei, dan Hang Seng di menu Chart.'),
-    (Icons.savings_outlined, 'Hitung emas fisik', 'Cek selisih harga dan estimasi keuntunganmu.'),
-    (Icons.insights_rounded, 'Sinyal harian', 'Bandingkan Close kemarin dan Open hari ini lewat Nest.'),
-    (Icons.newspaper_rounded, 'Kabar terbaru', 'Baca berita pasar dari Bloomberg, CNBC, dan Reuters.'),
-    (Icons.history_rounded, 'Riwayat tersimpan', 'Lihat kembali hasil perhitunganmu di menu History.'),
+  // (gambar, judul, isi). Tambah atau ubah pesan di sini.
+  static const _messages = <(String, String, String)>[
+    ('assets/images/welcome/welcome_hello.webp', 'Selamat datang!', 'Pantau pasar dan hitung peluangmu dengan lebih tenang.'),
+    ('assets/images/welcome/welcome_pivot.webp', 'Siap menghitung?', 'Coba Pivot Point untuk melihat level support dan resistance.'),
+    ('assets/images/welcome/welcome_chart.webp', 'Pantau grafik', 'Lihat Gold, Nikkei, dan Hang Seng di menu Chart.'),
+    ('assets/images/welcome/welcome_emas.webp', 'Hitung emas fisik', 'Cek selisih harga dan estimasi keuntunganmu.'),
+    ('assets/images/welcome/welcome_nest.webp', 'Sinyal harian', 'Bandingkan Close kemarin dan Open hari ini lewat Nest.'),
+    ('assets/images/welcome/welcome_news.webp', 'Kabar terbaru', 'Baca berita pasar dari Bloomberg, CNBC, dan Reuters.'),
+    ('assets/images/welcome/welcome_history.webp', 'Riwayat tersimpan', 'Lihat kembali hasil perhitunganmu di menu History.'),
   ];
 
   late int _index = Random().nextInt(_messages.length);
@@ -251,7 +251,19 @@ class _WelcomeCardState extends State<_WelcomeCard> {
     _timer = Timer.periodic(const Duration(seconds: 6), (_) {
       if (!mounted) return;
       setState(() => _index = (_index + 1) % _messages.length);
+      _precache(_index + 1); // siapkan gambar berikutnya agar pergantian mulus
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _precache(_index);
+    _precache(_index + 1);
+  }
+
+  void _precache(int i) {
+    precacheImage(AssetImage(_messages[i % _messages.length].$1), context);
   }
 
   @override
@@ -264,33 +276,48 @@ class _WelcomeCardState extends State<_WelcomeCard> {
   Widget build(BuildContext context) {
     final m = _messages[_index];
 
-    return Container(
-      width: double.infinity,
-      alignment: Alignment.centerLeft,
-      constraints: const BoxConstraints(minHeight: 104),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.primarySoft,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: AnimatedSwitcher(
-        duration: const Duration(milliseconds: 500),
-        child: Row(
-          key: ValueKey(_index),
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(m.$2, style: AppTextStyles.labelLg()),
-                  const SizedBox(height: 6),
-                  Text(m.$3, style: AppTextStyles.bodySm(color: AppColors.textPrimary)),
-                ],
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Container(
+        width: double.infinity,
+        color: AppColors.primaryTint,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 500),
+          child: Column(
+            key: ValueKey(_index),
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              AspectRatio(
+                aspectRatio: 800 / 350,
+                child: Image.asset(
+                  m.$1,
+                  fit: BoxFit.cover,
+                  gaplessPlayback: true,
+                  errorBuilder: (context, error, stackTrace) => const ColoredBox(
+                    color: AppColors.primarySoft,
+                    child: Center(
+                      child: Icon(Icons.image_not_supported_outlined, color: AppColors.primaryDark),
+                    ),
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Icon(m.$1, size: 48, color: AppColors.primaryDark),
-          ],
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 14),
+                child: ConstrainedBox(
+                  // tinggi minimum supaya kartu tidak melompat saat teks berganti
+                  constraints: const BoxConstraints(minHeight: 62),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(m.$2, style: AppTextStyles.labelLg()),
+                      const SizedBox(height: 4),
+                      Text(m.$3, style: AppTextStyles.bodySm(color: AppColors.textPrimary)),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -84,6 +84,7 @@ flutter:
     - assets/images/onboarding_building.png
     - assets/images/lowprofile-highprofit.png
     - assets/images/logo_trustByEwf.png
+    - assets/images/welcome/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
