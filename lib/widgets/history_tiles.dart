@@ -31,11 +31,7 @@ class PivotHistoryTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 42, height: 42,
-              decoration: const BoxDecoration(color: AppColors.secondarySoft, shape: BoxShape.circle),
-              child: const Icon(Icons.equalizer_rounded, color: AppColors.secondary, size: 20),
-            ),
+            Image.asset('assets/images/welcome/pivot_point.webp', width: 42, height: 42),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -83,11 +79,7 @@ class NestHistoryTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 42, height: 42,
-              decoration: const BoxDecoration(color: AppColors.secondarySoft, shape: BoxShape.circle),
-              child: const Icon(Icons.compare_arrows_rounded, color: AppColors.secondary, size: 20),
-            ),
+            Image.asset('assets/images/welcome/nest.webp', width: 42, height: 42),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -134,18 +126,7 @@ class EmasHistoryTile extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Container(
-              width: 42, height: 42,
-              decoration: BoxDecoration(
-                color: untung ? AppColors.successBg : AppColors.dangerBg,
-                shape: BoxShape.circle,
-              ),
-              child: Icon(
-                Icons.monetization_on_rounded,
-                color: untung ? AppColors.success : AppColors.danger,
-                size: 20,
-              ),
-            ),
+            Image.asset('assets/images/welcome/emas_fisik.webp', width: 42, height: 42),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
